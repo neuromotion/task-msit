@@ -11,7 +11,11 @@ const taskBlock = (trainingBlockSequence, mainBlockSequence) => {
 		type: 'html_keyboard_response',
 	  stimulus: '',
 		on_load: () => console.log(training_timeline),
-		timeline: training_timeline
+		timeline: [
+			training_timeline,
+			main_timeline
+		]
+
 	}
 }
 
