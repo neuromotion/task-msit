@@ -11,7 +11,8 @@
     },
     "fullscreen": "Press 'cmd + ctrl + F' to toggle Fullscreen.",
     "zoom": "Zoom in to enlarge the screen.",
-    "setting_up": "Setting up task..."
+    "setting_up": "Setting up task...",
+    "too_slow": "Response too slow. Please try to respond faster."
   },
   "welcome": {
     "large_window": "Please make this window as large as possible.",

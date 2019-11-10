@@ -9,7 +9,6 @@ import { MTURK, lang } from '../config/main'
 
 import startCode from '../trials/startCode'
 
-
 const primaryTimeline = [
         preamble,
         taskBlock(trainingBlockSequence, mainBlockSequence),

@@ -5,6 +5,7 @@ import { MTURK } from './config/main'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/all.css'
+import { rt_categorize_html } from './lib/rt-categorize-html'
 import { getTurkUniqueId } from './lib/utils'
 
 const isElectron = !MTURK
@@ -24,6 +25,7 @@ class App extends React.Component {
   render() {
     console.log("Outside Turk:", jsPsych.turk.turkInfo().outsideTurk)
     console.log("Turk:", MTURK)
+    jsPsych.plugins['rt-categorize-html'] = rt_categorize_html();
 
     return (
       <div className="App">

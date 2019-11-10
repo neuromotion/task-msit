@@ -4,7 +4,7 @@ import showCondition from '../trials/showCondition'
 import taskEnd from '../trials/taskEnd'
 import { baseStimulus } from '../lib/markup/stimuli'
 import { pdSpotEncode, photodiodeGhostBox } from '../lib/markup/photodiode'
-import { eventCodes } from '../config/main'
+import { eventCodes, lang } from '../config/main'
 
 const taskTrial = (trial) => {
   // initialize trial details
@@ -15,9 +15,12 @@ const taskTrial = (trial) => {
     </div>
     `, true) + photodiodeGhostBox()
   const msit_Trial = {
-    type: 'html_keyboard_response',
+    type: 'rt-categorize-html',
     trial_duration: 1250,
     on_load: () => pdSpotEncode(code),
+    key_answer: 48+trial.Correct,
+    show_stim_with_feedback: false,
+    timeout_message: lang.prompt.too_slow,
     stimulus: stimulus,
     response_ends_trial: true,
     on_finish: (data) => {
