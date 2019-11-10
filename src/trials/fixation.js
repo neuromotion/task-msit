@@ -14,8 +14,8 @@ const fixation = (duration) => {
     choices: jsPsych.NO_KEYS,
     stimulus: stimulus,
     response_ends_trial: false,
-    trial_duration: jitter50(duration),
-    on_load: () => pdSpotEncode(code),
+    trial_duration: jitter50(duration), //change jitter function
+    on_load: () => {console.log('fix'); pdSpotEncode(code)},
     on_finish: (data) => data.code = code
   }
 }

@@ -1,11 +1,12 @@
 {
   "task": {
-    "name": "Neuro Task",
+    "name": "MSIT",
     "end": "This experiment has ended."
   },
   "prompt": {
     "continue": {
       "press": "Press any key to continue.",
+      "start_practice": "Press any button to start the practice",
       "button": "Continue"
     },
     "fullscreen": "Press 'cmd + ctrl + F' to toggle Fullscreen.",
@@ -15,6 +16,38 @@
   "welcome": {
     "large_window": "Please make this window as large as possible.",
     "message": "Instructions"
+  },
+  "instructions": {
+    "welcome": "The numbers game",
+    "p1": "You will see sets of 3 numbers appear in the center of the screen every few seconds.",
+    "p2": "These numbers will range from 0-3.",
+    "p3": "One of these numbers will be different than the other two.",
+    "p4": "Your task is to press the button corresponding to the identity of the number that is different.",
+    "p5": "For example, if you see:",
+    "t100": "100",
+    "press_one": "Press button 1",
+    "if_see": "If you see:",
+    "t020": "020",
+    "press_two": "Press button 2",
+    "t003": "003",
+    "press_three": "Press button 3",
+    "t212": "212",
+    "t112": "112",
+    "t322": "322",
+    "t221": "221",
+    "t211": "211",
+    "t232": "232",
+    "p6": "Each set of 3 numbers will be separated by a dot on the screen lasting approximately 2 seconds.",
+    "p7": "Respond to each set of 3 numbers as quickly as possible, while still trying to make the correct response.",
+    "p8": "You must make your response within a given time window. If your response is too slow, you will get a warning message before the next dot.",
+    "p9": "The experiment is split into 8 blocks of trials, each lasting between 2-3 minutes.",
+    "p10": "After each block, you will be able to take a break and will see your accuracy for that block.",
+    "p11": "The total experiment will last between 15 and 20 minutes.",
+    "p12": "Eye and other muscle movements interfere with the EEG signal. To help prevent this we ask you to try to:",
+    "p13": "1. Maintain your vision at the center of the screen at all times during the experiment trials.",
+    "p14": "2. Try not to blink while the number are on the screen. Instead try to blink right after you've made your response and the dot comes on the screen.",
+    "p15": "3. Try to relax your shoulders, neck, and face as much as possible. Do not clench your jaw.",
+    "practice_trials": "We will practice with some example trials. <br> Remember, respond only to the identity of the number that is different, not the position of the number."
   },
   "userid": {
     "set": "Please enter patient ID."

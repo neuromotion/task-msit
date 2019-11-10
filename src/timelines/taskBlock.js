@@ -1,22 +1,17 @@
 import taskTrial from './taskTrial'
-import { generateStartingOpts } from '../lib/taskUtils'
 
-const taskBlock = (blockSettings) => {
-  // initialize block
-	const startingOpts = generateStartingOpts(blockSettings)
-
-  const blockDetails = {
-	  block_earnings: 0.0,
-		optimal_earnings: 0.0,
-		continue_block: true
-	}
-
-	// timeline = loop through trials
-	let timeline = startingOpts.map( (condition) => taskTrial(blockSettings, blockDetails, condition))
-
-  return {
+const taskBlock = (trainingBlockSequence, mainBlockSequence) => {
+	let training_timeline = trainingBlockSequence.then(function(data) {
+		return data.map( (trial) => taskTrial(trial))
+	});
+	let main_timeline = mainBlockSequence.then(function(data) {
+		return data.map( (trial) => taskTrial(trial))
+	});
+	return {
 		type: 'html_keyboard_response',
-		timeline: timeline
+	  stimulus: '',
+		on_load: () => console.log(training_timeline),
+		timeline: training_timeline
 	}
 }
 

@@ -1,6 +1,7 @@
 import experimentStart from '../trials/experimentStart'
 import startCode from '../trials/startCode'
 import userId from '../trials/userId'
+import instructions from '../trials/instructions'
 import holdUpMarker from '../trials/holdUpMarker'
 import { AT_HOME } from '../config/main'
 
