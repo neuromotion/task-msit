@@ -13,11 +13,13 @@ const log = require('electron-log');
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
 // Event Trigger
 const { eventCodes, manufacturer, vendorId, productId } = require('./config/trigger')
-const { isPort, getPort, sendToPort } = require('event-marker')
 
 // Override product ID if environment variable set
 const activeProductId = process.env.EVENT_MARKER_PRODUCT_ID || productId
 log.info("Active product ID", activeProductId)
+
+const { isPort, getPort, sendToPort } = require('event-marker')
+log.info(AT_HOME)
 
 // Data Saving
 const { dataDir } = require('./config/saveData')
@@ -28,17 +30,16 @@ let mainWindow
 
 function createWindow () {
   if (AT_HOME) {
-    log.info('Task "at home" version.')
+    log.info('Develop "at home" version.')
   }
   else {
-    log.info('Task "clinic" version.')
+    log.info('Develop "clinic" version.')
   }
   // Create the browser window.
   if (process.env.ELECTRON_START_URL) { // in dev mode, disable web security to allow local file loading
     mainWindow = new BrowserWindow({
       width: 1500,
       height: 900,
-      icon: './favicon.ico',
       webPreferences: {
         nodeIntegration: true,
         webSecurity: false
@@ -47,8 +48,7 @@ function createWindow () {
   } else {
     mainWindow = new BrowserWindow({
       fullscreen: true,
-      icon: './favicon.ico',
-      frame: false,
+      frame: AT_HOME,
       webPreferences: {
         nodeIntegration: true,
         webSecurity: true
@@ -188,25 +188,9 @@ ipc.on('data', (event, args) => {
   }
 })
 
-// EXPERIMENT END
+
+// EXPERMENT END
 ipc.on('end', (event, args) => {
-  // finish writing file
-  stream.write(']')
-  stream.end()
-  stream = false
-
-  // copy file to config location
-  const desktop = app.getPath('desktop')
-  const name = app.getName()
-  const today = new Date(Date.now())
-  const date = today.toISOString().slice(0,10)
-  const copyPath = path.join(desktop, dataDir, `${patientID}`, date, name)
-  fs.mkdir(copyPath, { recursive: true }, (err) => {
-    log.error(err)
-    fs.copyFileSync(filePath, path.join(copyPath, fileName))
-
-  })
-
   // quit app
   app.quit()
 })
@@ -220,7 +204,7 @@ ipc.on('error', (event, args) => {
   }
   const opt = dialog.showMessageBoxSync(mainWindow, {type: "error", message: args, title: "Task Error", buttons: buttons})
 
-  if (opt == 0) app.exit()
+  if (opt == 0) app.quit()
 })
 
 
@@ -261,3 +245,26 @@ app.on('activate', function () {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+
+
+// Before quitting, finish writing file and copy it over
+app.on('will-quit', () => {
+  if (fileName) {
+    // finish writing file
+    stream.write(']')
+    stream.end()
+    stream = false
+
+    // copy file to config location
+    const desktop = app.getPath('desktop')
+    const name = app.getName()
+    const today = new Date(Date.now())
+    const date = today.toISOString().slice(0,10)
+    const copyPath = path.join(desktop, dataDir, `${patientID}`, date, name)
+    fs.mkdir(copyPath, { recursive: true }, (err) => {
+      log.error(err)
+      fs.copyFileSync(filePath, path.join(copyPath, fileName))
+
+    })
+  }
+})
