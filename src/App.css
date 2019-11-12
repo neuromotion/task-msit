@@ -66,3 +66,7 @@ html, body, #root, .App {
 .too_slow {
   font-size: 1.5rem
 }
+
+.feedback {
+  display: none;
+}

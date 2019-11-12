@@ -5,8 +5,7 @@ import { MTURK } from './config/main'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/all.css'
-import { rt_categorize_html } from './lib/rt-categorize-html'
-import { getTurkUniqueId } from './lib/utils'
+import { getTurkUniqueId, sleep } from './lib/utils'
 
 const isElectron = !MTURK
 let ipcRenderer = false;
@@ -25,7 +24,6 @@ class App extends React.Component {
   render() {
     console.log("Outside Turk:", jsPsych.turk.turkInfo().outsideTurk)
     console.log("Turk:", MTURK)
-    jsPsych.plugins['rt-categorize-html'] = rt_categorize_html();
 
     return (
       <div className="App">
@@ -44,8 +42,12 @@ class App extends React.Component {
               ipcRenderer.send('end', 'true')
             }
             else if (psiturk) {
+              const completePsiturk = async () => {
                 psiturk.saveData()
+                await sleep(5000)
                 psiturk.completeHIT()
+              }
+              completePsiturk()
             }
           },
         }}

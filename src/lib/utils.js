@@ -1,6 +1,10 @@
 import { jsPsych } from 'jspsych-react'
 import requireContext from 'require-context.macro'
 
+const sleep = (ms) => {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 // add a random number between 0 and offset to the base number
 const jitter = (base, offset) => (
   base + Math.floor(Math.random() * Math.floor(offset))
@@ -76,5 +80,6 @@ export {
   images,
   startKeypressListener,
   getUserId,
-  getTurkUniqueId
+  getTurkUniqueId,
+  sleep
 }
