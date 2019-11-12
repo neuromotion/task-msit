@@ -3,8 +3,10 @@ import interference from '../trials/interference'
 import accuracy from '../trials/accuracy'
 import trainingBlock from '../config/pcps_msit_eeg_train_sequence.json'
 import mainBlock from '../config/pcps_msit_eeg_trial_sequence.json'
+import { removeCursor } from '../lib/utils'
 
 const taskBlock = (training) => {
+	removeCursor('root')
 	const block = training ? trainingBlock : mainBlock;
 	const num_trials = training ? block.length : 96;
 	let timeline = block.map( (trial) => {

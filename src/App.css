@@ -70,3 +70,7 @@ html, body, #root, .App {
 .feedback {
   display: none;
 }
+
+.nocursor {
+  cursor: none;
+}

@@ -5,6 +5,17 @@ const sleep = (ms) => {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+const removeCursor = (elementId) => {
+  let element = document.getElementById(elementId);
+  element.classList.add("nocursor");
+}
+
+const addCursor = (elementId) => {
+  let element = document.getElementById(elementId);
+  element.classList.remove("nocursor");
+}
+
+
 // add a random number between 0 and offset to the base number
 const jitter = (base, offset) => (
   base + Math.floor(Math.random() * Math.floor(offset))
@@ -81,5 +92,7 @@ export {
   startKeypressListener,
   getUserId,
   getTurkUniqueId,
-  sleep
+  sleep,
+  removeCursor,
+  addCursor
 }
