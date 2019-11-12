@@ -29,8 +29,12 @@ jobs:
     # install, test, build package
     - name: npm install
       run: npm install
-    - name: npm build
+    - name: npm build - linux mac
+      if: startsWith(matrix.os, 'mac') || startsWith(matrix.os, 'ubuntu')
       run: npm run build
+    - name: npm build - windows clinic
+      if: startsWith(matrix.os, 'windows')
+      run: npm run build:win:clinic
     - name: npm test
       run: npm test
       env:
@@ -40,6 +44,10 @@ jobs:
     - name: package electron - windows
       if: startsWith(matrix.os, 'windows')
       run: npm run package:windows
+    - name: Rename windows installer - clinic
+      if: startsWith(matrix.os, 'windows')
+      shell: bash
+      run: mv dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup.exe dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-clinic.exe
     - name: package electron - linux
       if: startsWith(matrix.os, 'ubuntu')
       run: npm run package:linux
@@ -58,7 +66,7 @@ jobs:
       if: startsWith(matrix.os, 'windows')
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup.exe
+        files: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-clinic.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     - name: Upload app to release - linux
@@ -72,7 +80,33 @@ jobs:
       if: startsWith(matrix.os, 'mac')
       uses: softprops/action-gh-release@v1
       with:
-        files: dist/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}.dmg
+        files: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}.dmg
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Build At Home Windows Release
+    - name: npm build - win home
+      run: npm run build:win:home
+      env:
+        CI: true
+        REACT_APP_AT_HOME: true
+    - name: npm test - win home
+      run: npm test
+      env:
+        CI: true
+        REACT_APP_AT_HOME: true
+    - name: package electron - windows home
+      if: startsWith(matrix.os, 'windows')
+      run: npm run package:windows
+    - name: Rename windows installer - home
+      if: startsWith(matrix.os, 'windows')
+      shell: bash
+      run: mv dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup.exe dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-home.exe
+    - name: Upload app to release - windows home
+      if: startsWith(matrix.os, 'windows')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-home.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -85,15 +119,23 @@ jobs:
     - name: Install PsiTurk
       if: startsWith(matrix.os, 'ubuntu')
       run: pip install psiturk
+    - name: PsiTurk Build
+      if: startsWith(matrix.os, 'ubuntu')
+      run: npm run build:home
+      env:
+        CI: true
+        REACT_APP_AT_HOME: true
     - name: Create Psiturk Build
       if: startsWith(matrix.os, 'ubuntu')
       run: |
         cd psiturkit
         ./psiturk-it -p ${{ steps.package_info.outputs.package_name }}-psiturk
+        cd ..
+        tar -cvzf ${{ steps.package_info.outputs.package_name }}-psiturk.tar.gz psiturkit/${{ steps.package_info.outputs.package_name }}-psiturk
     - name: Upload PsiTurk build to release
       if: startsWith(matrix.os, 'ubuntu')
       uses: softprops/action-gh-release@v1
       with:
-        files: psiturkit/${{ steps.package_info.outputs.package_name }}-psiturk
+        files: ${{ steps.package_info.outputs.package_name }}-psiturk.tar.gz
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
