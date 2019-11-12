@@ -8,7 +8,7 @@ const interference = (trial) => {
   const code = eventCodes.non_fixation;
   var stimulus = interferenceTrial(trial.Stimuli, false) + photodiodeGhostBox()
   return {
-    type: 'categorize_html',
+    type: 'rt-categorize-html',
     trial_duration: 1250,
     on_load: () => pdSpotEncode(code),
     key_answer: 48+trial.Correct,
