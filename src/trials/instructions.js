@@ -1,6 +1,5 @@
-import { lang } from '../config/main'
+import { lang, AT_HOME } from '../config/main'
 import { baseStimulus } from '../lib/markup/stimuli'
-
 
 const screenOne = () => {
   var stimulus = baseStimulus(`
@@ -246,25 +245,29 @@ const screenFifteen = () => {
 }
 
 const instructions = () => {
+  let tl = [
+    screenOne(),
+    screenTwo(),
+    screenThree(),
+    screenFour(),
+    screenFive(),
+    screenSix(),
+    screenSeven(),
+    screenEight(),
+    screenNine(),
+    screenTen(),
+    screenEleven(),
+    screenTwelve(),
+    screenThirteen(),
+    screenFourteen(),
+    screenFifteen(),
+  ]
+
+  if (AT_HOME) tl.splice(13,1)
+
   return {
     type: 'html_keyboard_response',
-    timeline: [
-      screenOne(),
-      screenTwo(),
-      screenThree(),
-      screenFour(),
-      screenFive(),
-      screenSix(),
-      screenSeven(),
-      screenEight(),
-      screenNine(),
-      screenTen(),
-      screenEleven(),
-      screenTwelve(),
-      screenThirteen(),
-      screenFourteen(),
-      screenFifteen(),
-    ]
+    timeline: tl
   }
 }
 
