@@ -1,18 +1,14 @@
-import buildCountdown from '../trials/countdown'
 import preamble from './preamble'
 import experimentEnd from '../trials/experimentEnd'
 import taskBlock from './taskBlock'
-import userId from '../trials/userId'
-import { trainingBlockSequence, mainBlockSequence } from '../config/main'
 
-import { MTURK, lang } from '../config/main'
-
-import startCode from '../trials/startCode'
+import { MTURK } from '../config/main'
 
 const primaryTimeline = [
         preamble,
-        taskBlock(trainingBlockSequence, mainBlockSequence),
-        experimentEnd(5000)
+        taskBlock(true),
+        taskBlock(false),
+        experimentEnd(3000)
         ]
 
 const mturkTimeline = [

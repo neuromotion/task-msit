@@ -11,8 +11,8 @@ const preamble = {
   type: 'html_keyboard_response',
   stimulus: '',
   timeline: (AT_HOME) ?
-    [experimentStart(), userId()] :
-    [experimentStart(), userId(), holdUpMarker(), startCode()]
+    [experimentStart(), userId(), instructions()] :
+    [experimentStart(), userId(), holdUpMarker(), startCode(), instructions()]
 }
 
 export default preamble

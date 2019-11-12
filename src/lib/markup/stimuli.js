@@ -3,7 +3,6 @@ const baseStimulus = (element, prompt=false) => {
   return `<div class=${class_}>${element}</div>`
 }
 
-
 export {
   baseStimulus
 }

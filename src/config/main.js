@@ -5,8 +5,6 @@
 import { jsPsych } from 'jspsych-react'
 import _ from 'lodash'
 import { eventCodes } from './trigger'
-import requireContext from 'require-context.macro'
-import * as d3 from 'd3'
 
 // mapping of letters to key codes
 const keys = {
@@ -29,36 +27,8 @@ if (process.env.MTURK) { // if this is mturk, merge in the mturk specific langua
 	_.merge(lang, mlang)
 }
 
-const trainingBlockSequence = d3.csv("csv/pc+s_msit_eeg_training_trials.csv").then(function(data) {
-	const interference_trials = data.filter(function (trial) {
-		return trial.Condition !== 0;
-	});
-	const interference_stimuli = interference_trials.map(function (trial) {
-		return {
-			Stimulus: trial.Stimuli,
-			Correct: trial.Correct
-		}
-	});
-  return interference_stimuli
-});
-
-const mainBlockSequence = d3.csv("csv/pc+s_msit_eeg_trial_sequence1.csv").then(function(data) {
-	const interference_trials = data.filter(function (trial) {
-		return trial.Condition !== 0;
-	});
-	const interference_stimuli = interference_trials.map(function (trial) {
-		return {
-			Stimulus: trial.Stimuli,
-			Correct: trial.Correct
-		}
-	});
-  return interference_stimuli
-});
-
 export {
 	keys,
-	trainingBlockSequence,
-	mainBlockSequence,
 	lang,
 	eventCodes,
 	MTURK,

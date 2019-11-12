@@ -58,3 +58,11 @@ html, body, #root, .App {
   margin: 1rem;
   width: 10rem !important;
 }
+
+.interference {
+  font-size: 5rem
+}
+
+.too_slow {
+  font-size: 1.5rem
+}

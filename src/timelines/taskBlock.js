@@ -1,21 +1,36 @@
-import taskTrial from './taskTrial'
+import fixation from '../trials/fixation'
+import interference from '../trials/interference'
+import accuracy from '../trials/accuracy'
+import trainingBlock from '../config/pcps_msit_eeg_train_sequence.json'
+import mainBlock from '../config/pcps_msit_eeg_trial_sequence.json'
 
-const taskBlock = (trainingBlockSequence, mainBlockSequence) => {
-	let training_timeline = trainingBlockSequence.then(function(data) {
-		return data.map( (trial) => taskTrial(trial))
-	});
-	let main_timeline = mainBlockSequence.then(function(data) {
-		return data.map( (trial) => taskTrial(trial))
+const taskBlock = (training) => {
+	const block = training ? trainingBlock : mainBlock;
+	const num_trials = training ? block.length : 96;
+	let timeline = block.map( (trial) => {
+		if (trial.Trial % 2 === 1) {
+			return fixation(trial.Duration*1000)
+		}
+		else {
+			if (trial.Trial % 96 === 0) {
+				return { timeline: [interference(trial), accuracy(training, num_trials, trial.Trial)]}
+			}
+			else {
+				return interference(trial)
+			}
+		}
 	});
 	return {
 		type: 'html_keyboard_response',
 	  stimulus: '',
-		on_load: () => console.log(training_timeline),
-		timeline: [
-			training_timeline,
-			main_timeline
-		]
-
+		timeline: timeline,
+		loop_function: (data) => {
+			if (training && data.values()[data.values().length-1].percent_correct < 80) {
+				return true
+			} else {
+				return false
+			}
+		}
 	}
 }
 
