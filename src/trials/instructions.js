@@ -230,6 +230,7 @@ const screenFourteen = () => {
 }
 
 const screenFifteen = () => {
+
   var stimulus = baseStimulus(`
     <div class='instructions'>
     <p>${lang.instructions.practice_trials}</p>

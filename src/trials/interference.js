@@ -1,8 +1,10 @@
 import interferenceTrial  from '../lib/markup/trial'
 import { pdSpotEncode, photodiodeGhostBox } from '../lib/markup/photodiode'
 import { eventCodes, lang } from '../config/main'
+import { removeCursor } from '../lib/utils'
 
 const interference = (trial) => {
+
   const code = eventCodes.non_fixation;
   var stimulus = interferenceTrial(trial.Stimuli, false) + photodiodeGhostBox()
   return {
