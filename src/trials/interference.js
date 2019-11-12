@@ -11,7 +11,7 @@ const interference = (trial) => {
     on_load: () => pdSpotEncode(code),
     key_answer: 48+trial.Correct,
     show_stim_with_feedback: false,
-    feedback_duration: 50,
+    feedback_duration: 2000,
     timeout_message: interferenceTrial(lang.prompt.too_slow, true) + photodiodeGhostBox(),
     stimulus: stimulus,
     response_ends_trial: true,
