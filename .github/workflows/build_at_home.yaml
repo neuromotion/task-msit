@@ -30,8 +30,8 @@ jobs:
     # install, test, build package
     - name: npm install
       run: npm install
-    - name: npm build:win:home
-      run: npm run build
+    - name: npm build
+      run: npm run build:win:home
     - name: npm test
       run: npm test
       env:
