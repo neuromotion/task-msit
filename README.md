@@ -1,10 +1,10 @@
-# MSIT Task
-
-This repo contains the MSIT task. It is a [jspsych](https://www.jspsych.org/) task built with React and Electron. This task uses the [Neuro Task Starter](https://www.github.com/brown-ccv/neuro-task-starter).
-
+# MSIT Task 
 <p float="left">
   <img src="msit.svg" width="200" />
 </p>
+
+
+This repo contains the MSIT task. It is a [jspsych](https://www.jspsych.org/) task built with React and Electron. This task uses the [Neuro Task Starter](https://www.github.com/brown-ccv/neuro-task-starter).
 
 ## Getting Started
 
