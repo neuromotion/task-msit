@@ -124,7 +124,7 @@ export function rt_categorize_html() {
       jsPsych.pluginAPI.cancelAllKeyboardResponses();
 
       var correct = false;
-      if (trial.key_answer == info.key) {
+      if (trial.key_answer === info.key) {
         correct = true;
       }
 
