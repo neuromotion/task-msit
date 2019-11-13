@@ -1,12 +1,16 @@
 # MSIT Task
 
-This repo contains the MSIT task. It is a [jspsych](https://www.jspsych.org/) task built with React and Electron. 
+This repo contains the MSIT task. It is a [jspsych](https://www.jspsych.org/) task built with React and Electron. This task uses the [Neuro Task Starter](https://www.github.com/brown-ccv/neuro-task-starter).
+
+<p float="left">
+  <img src="msit.svg" width="200" />
+</p>
 
 ## Getting Started
 
 1. Clone this repo onto your computer
 ```
-git clone https://github.com/brown-ccv/task-msit.git project_name --depth 1
+git clone https://github.com/brown-ccv/task-msit.git
 ```
 2. Change directory into the new folder
 ```
@@ -40,20 +44,23 @@ The `package-lock.json` contains metadata about the package installation. It sho
 
 The `public` directory contains files that are used as assets in the built app. The `favicon.ico` is the small icon you can see in the browser tab (on Chrome) - it is set to Brown's logo in the project. The `index.html` contains the shell of your website - the name displayed on the tab can be changed here, otherwise it shouldn't need to be edited. The scripts included in the file are for `psiturk` as are the files in the `lib/` directory.
 
+#### `electron.js`
+
+This file contains all of the code relating to the electron app. This includes the event-marker, throwing errors via dialog windows, saving data, and reading files.
+
+#### `config/`
+
+The `config` directory contains the config files needed for the electron app.  This includes the event-marker details and event codes.
+
+Note: the productId can be overwritten by the environment variable EVENT_MARKER_PRODUCT_ID
+
 ### `src/`
 
 This folder contains the code for the app, the vast majority of changes and code should go here.
 
-#### `__tests__`
-This folder contains the tests for the app. They can be run with `npm test`.
-
 #### `App.js`
 
 This is the starting point for the app. The `<Experiment>` component initializes a `jspsych` experiment. This is also where communication is set up with the `electron` and `psiturk` processes.
-
-#### `electron-starter.js`
-
-This file controls the main electron process. This is where any code that needs to interact with the system (ports, file system, etc.) should go. To communicate between electron and the task, use `ipc`.
 
 #### `App.css`
 
@@ -71,7 +78,7 @@ Other config files can be used to add settings for specific blocks or sub-sectio
 
 #### `language/`
 
-Any language that is displayed in the experiment should be stored in this folder. Usage of language json files allows for easy internationalization of the task (e.g. english and spanish) as well as allows for mturk specific language. This also makes it easy to re-use common phrases in many places in the task.
+Any language that is displayed in the experiment should be stored in this folder. Usage of language json files allows for easy internationalization of the task (e.g. English and Spanish) as well as allows for mturk specific language. This also makes it easy to re-use common phrases in many places in the task.
 
 #### `lib/`
 
@@ -97,6 +104,10 @@ While this set up is optimized for Electron, we added functionality that will ma
 - Switch the language to Turk specific, if `src/language/<locale>.mturk.json` exists.  
 - Use the Turk specific timeline if different than the primary timeline.  
 
+**Prebuilt version**
+When GitHub Actions is run, a psiturk build will be created automatically, and can be downloaded from its artifacts (skip next step if using).
+
+**Build instructions**
 To set up your PsiTurk project, we provide a script that does the conversion.
 PsiTurk is a Python package used to manage HITs in Mechanical Turk. Before using the provided script, install [PsiTurk](https://psiturk.org/).
 
@@ -105,16 +116,17 @@ You'll need to follow these steps (the path to the PsiTurk project should be a d
 - Move to the `psiturkit` directory: `cd psiturkit`
 - If it's the first time you're running the script:  
   `./psiturk-it -p <PATH_TO_NEW_PSITURK_PROJECT>`  
+
 - To update an existing PsiTurk project (the path to the PsiTurk project should already exist from the previous steps):  
   `./psiturk-it -u -p <PATH_TO_NEW_PSITURK_PROJECT>`
 
+**Running psiturk**
 After that, just navigate to your newly created PsiTurk project directory.
 ```shell
 shell> psiturk #start psiturk
 psiturk> server on #start server
 psiturk> debug #debug mode
 ```
-
 
 ## Best Practices
 
@@ -144,11 +156,8 @@ When developing electron apps there are two processes: `main`, and `renderer`.  
 
 #### Package not found or other error related to `npm`
 
-Try deleting your `node_modules` folder and the `package-lock.json` then running `npm install -D`.
+Try deleting your `node_modules` folder and the `package-lock.json` then running `npm install` then `npm run rebuild`.
 
-#### `(node:79877) UnhandledPromiseRejectionWarning: TypeError: p.write is not a function`
-
-If this is showing in the electron console, this means the event marker is not connected - otherwise everything will run fine.
 
 ## Available Scripts
 
@@ -157,6 +166,10 @@ In the project directory, you can run:
 ### `npm run dev`
 
 Runs `npm start` and `npm run electron-dev` concurrently.  This may not play nicely with windows.  If it doesn't, run `npm start` and `npm run electron-dev` from different terminal windows.
+
+### `npm run dev:<setting>`
+`setting`: `clinic` or `home`
+Runs the app in development mode for the different settings.
 
 ### `npm start`
 
@@ -171,24 +184,18 @@ You will also see any lint errors in the console.
 Launches the test runner in the interactive watch mode.<br>
 See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `npm run build:platform`
+### `npm build`
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
-platform: windows, mac, linux.
+Creates a production build of the app (renderer).  This must be done before running `package:platform` or the psiturk build instructions.
 
-#### Prerequisites:windows
+### `npm run build:win:<setting>`
 
-If not running this command on a windows machine, must have `mono` and `wine` installed.
+Creates production builds for Windows for a particular setting (`home` or `clinic`).
+### `npm run package:platform`
 
-#### To build all:
+It correctly bundles creates electron packages for the given platform.  It then creates an installer for that platform.  The output can be found in `/dist`
+platforms: windows, mac, linux.
 
-### `npm run build`
-
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
 #### Prerequisites
 
