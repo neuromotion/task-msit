@@ -3,7 +3,7 @@
   <img src="msit.svg" width="200" />
 </p>
 
-[![Actions Status](https://github.com/brown-ccv/task-msit/workflows/Test%2C%20Build%2C%20and%20Package/badge.svg)](https://github.com/brown-ccv/task-msit/actions)
+[![Actions Status](https://github.com/brown-ccv/task-msit/workflows/Test%2C%20Build%2C%20and%20Package/badge.svg)](https://github.com/brown-ccv/task-msit/actions) 
 [![Actions Status](https://github.com/brown-ccv/task-msit/workflows/Build%20at%20home%20version%20%28Windows%29/badge.svg)](https://github.com/brown-ccv/task-msit/actions)  
 
 
