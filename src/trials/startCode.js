@@ -1,4 +1,4 @@
-import { eventCodes, lang } from '../config/main'
+import { eventCodes, lang, xcorrAudio } from '../config/main'
 import { photodiodeGhostBox, pdSpotEncode } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 
@@ -11,6 +11,8 @@ const startCode = () => {
     trial_duration: 2000,
     on_load: () => {
       pdSpotEncode(eventCodes.open_task)
+      let audio = new Audio(xcorrAudio);
+      audio.play();
     }
   }
 }
