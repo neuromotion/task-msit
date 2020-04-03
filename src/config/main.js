@@ -17,6 +17,12 @@ const keys = {
 	"space": 32
 }
 
+// audio codes
+const audioCodes = {
+	frequency: 50,
+	type: 'sawtooth'
+}
+
 // is this mechanical turk?
 const MTURK = (!jsPsych.turk.turkInfo().outsideTurk)
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
@@ -33,7 +39,6 @@ const importAll = (r) => {
 }
 
 const audio = importAll(requireContext('../assets/audio', false, /\.(m4a|mp3)$/))
-const xcorrAudio = _.filter(audio, (o) => o.includes(`xcorr_audio`))[0]
 
 export {
 	keys,
@@ -41,5 +46,6 @@ export {
 	eventCodes,
 	MTURK,
 	AT_HOME,
-	xcorrAudio
+	audioCodes
+
 }
