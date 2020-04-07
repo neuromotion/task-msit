@@ -43,6 +43,7 @@
     "t221": "221",
     "t211": "211",
     "t232": "232",
+    "adjust_volume": "Set tablet volume to 50/100.",
     "p6": "Each set of 3 numbers will be separated by a dot on the screen lasting approximately 2 seconds.",
     "p7": "Respond to each set of 3 numbers as quickly as possible, while still trying to make the correct response.",
     "p8": "You must make your response within a given time window. If your response is too slow, you will get a warning message before the next dot.",
