@@ -13,7 +13,7 @@ const preamble = {
   stimulus: '',
   timeline: (AT_HOME) ?
     [experimentStart(), userId(), instructions()] :
-    [experimentStart(), userId(), holdUpMarker(), adjustVolume(), startCode(), instructions()]
+    [experimentStart(), userId(), adjustVolume(), holdUpMarker(), startCode(), instructions()]
 }
 
 export default preamble
