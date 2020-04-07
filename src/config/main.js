@@ -38,8 +38,6 @@ const importAll = (r) => {
   return r.keys().map(r);
 }
 
-const audio = importAll(requireContext('../assets/audio', false, /\.(m4a|mp3)$/))
-
 export {
 	keys,
 	lang,
