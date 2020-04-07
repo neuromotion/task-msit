@@ -19,8 +19,8 @@ const keys = {
 
 // audio codes
 const audioCodes = {
-	frequency: 50,
-	type: 'sawtooth'
+	frequency: 100*(eventCodes.open_task - 9),
+	type: 'sine'
 }
 
 // is this mechanical turk?
