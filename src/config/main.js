@@ -5,7 +5,6 @@
 import { jsPsych } from 'jspsych-react'
 import _ from 'lodash'
 import { eventCodes } from './trigger'
-import requireContext from 'require-context.macro'
 
 // mapping of letters to key codes
 const keys = {
@@ -32,10 +31,6 @@ const lang = require('../language/en_us.json')
 if (process.env.MTURK) { // if this is mturk, merge in the mturk specific language
   const mlang = require('../language/en_us.mturk.json')
 	_.merge(lang, mlang)
-}
-
-const importAll = (r) => {
-  return r.keys().map(r);
 }
 
 export {
