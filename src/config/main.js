@@ -5,7 +5,6 @@
 import { jsPsych } from 'jspsych-react'
 import _ from 'lodash'
 import { eventCodes } from './trigger'
-import requireContext from 'require-context.macro'
 
 // mapping of letters to key codes
 const keys = {
@@ -15,6 +14,12 @@ const keys = {
 	"F": 70,
 	"J": 74,
 	"space": 32
+}
+
+// audio codes
+const audioCodes = {
+	frequency: 100*(eventCodes.open_task - 9),
+	type: 'sine'
 }
 
 // is this mechanical turk?
@@ -28,18 +33,12 @@ if (process.env.MTURK) { // if this is mturk, merge in the mturk specific langua
 	_.merge(lang, mlang)
 }
 
-const importAll = (r) => {
-  return r.keys().map(r);
-}
-
-const audio = importAll(requireContext('../assets/audio', false, /\.(m4a|mp3)$/))
-const xcorrAudio = _.filter(audio, (o) => o.includes(`xcorr_audio`))[0]
-
 export {
 	keys,
 	lang,
 	eventCodes,
 	MTURK,
 	AT_HOME,
-	xcorrAudio
+	audioCodes
+
 }
