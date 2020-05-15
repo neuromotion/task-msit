@@ -30,8 +30,16 @@ html, body, #root, .App {
   position: absolute;
 }
 
-.main-prompt, .beads_container {
-  height: 100vh;
+.main-prompt {
+  height: 70vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center !important;
+}
+
+.beads_container {
+  height: 100vh !important;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -39,10 +47,6 @@ html, body, #root, .App {
 }
 
 
-.main-prompt {
-  margin-top: -20%;
-  margin-bottom: -5%;
-}
 
 #fixation-dot {
   background-color: white;
