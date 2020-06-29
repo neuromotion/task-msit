@@ -55,7 +55,7 @@ This file contains all of the code relating to the electron app. This includes t
 
 The `config` directory contains the config files needed for the electron app.  This includes the event-marker details and event codes.
 
-Note: the productId can be overwritten by the environment variable EVENT_MARKER_PRODUCT_ID
+Note: the `comName` can be overwritten by the environment variable COMNAME.
 
 ### `src/`
 
