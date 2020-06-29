@@ -1,4 +1,4 @@
-import { lang } from '../config/main'
+import { lang, AT_HOME } from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 
@@ -8,7 +8,14 @@ const experimentEnd = (duration) => {
    return {
     type: 'html_keyboard_response',
     stimulus: stimulus,
-    trial_duration: duration
+    trial_duration: duration,
+    on_load: () => {
+      if (AT_HOME) {
+        console.log('finished')
+        window.cameraCapture.stop()
+        window.screenCapture.stop()
+      }
+    }
   }
 }
 

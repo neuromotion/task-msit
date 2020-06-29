@@ -7,7 +7,7 @@ const path = require('path')
 const url = require('url')
 const ipc = require('electron').ipcMain
 const _ = require('lodash')
-const fs = require('fs')
+const fs = require('fs-extra')
 const log = require('electron-log');
 
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
@@ -188,6 +188,24 @@ ipc.on('data', (event, args) => {
   }
 })
 
+// Save Video
+
+ipc.on('save_video', (event, fileName, buffer) => {
+  
+  const desktop = app.getPath('desktop')
+  const name = app.getName()
+  const today = new Date(Date.now())
+  const date = today.toISOString().slice(0,10)
+  const fullPath = path.join(desktop, dataDir, `${patientID}`, date, name, fileName)
+  fs.outputFile(fullPath, buffer, err => {
+      if (err) {
+          event.sender.send(ERROR, err.message)
+      } else {
+        event.sender.send('SAVED_FILE', fullPath)
+        console.log(fullPath)
+      }
+  })
+})
 
 // EXPERMENT END
 ipc.on('end', (event, args) => {

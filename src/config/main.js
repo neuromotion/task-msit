@@ -33,12 +33,15 @@ if (process.env.MTURK) { // if this is mturk, merge in the mturk specific langua
 	_.merge(lang, mlang)
 }
 
+const taskName = "MSIT"
+
 export {
 	keys,
 	lang,
 	eventCodes,
 	MTURK,
 	AT_HOME,
-	audioCodes
+	audioCodes,
+	taskName
 
 }
