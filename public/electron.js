@@ -12,13 +12,13 @@ const log = require('electron-log');
 
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
 // Event Trigger
-const { eventCodes, manufacturer, vendorId, productId } = require('./config/trigger')
+const { eventCodes, comName } = require('./config/trigger')
 
-// Override product ID if environment variable set
-const activeProductId = process.env.EVENT_MARKER_PRODUCT_ID || productId
-log.info("Active product ID", activeProductId)
+// Override comName if environment variable set
+const activeComName = process.env.COMNAME || comName;
+log.info("Trigger Box comName", activeComName);
 
-const { isPort, getPort, sendToPort } = require('event-marker')
+const { getPort, sendToPort } = require('event-marker')
 log.info(AT_HOME)
 
 // Data Saving
@@ -83,7 +83,7 @@ let portAvailable
 let SKIP_SENDING_DEV = false
 
 const setUpPort = async () => {
-  p = await getPort(vendorId, activeProductId)
+  p = await getPort(activeComName)
   if (p) {
     triggerPort = p
     portAvailable = true
@@ -158,6 +158,11 @@ let patientID = ''
 let images = []
 let startTrial = -1
 
+
+// Read version file (git sha and branch)
+var git = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config/version.json')));
+
+
 // listener for new data
 ipc.on('data', (event, args) => {
 
@@ -181,7 +186,7 @@ ipc.on('data', (event, args) => {
     }
 
     //write the data
-    stream.write(JSON.stringify(args))
+    stream.write(JSON.stringify({...args, git}))
 
     // Copy provocation images to patient's data folder
     if (args.trial_type === 'image_keyboard_response') images.push(args.stimulus.slice(7))
