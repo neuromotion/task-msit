@@ -29,6 +29,8 @@ jobs:
     # install, test, build package
     - name: npm install
       run: npm install
+    - name: get git revision and branch
+      run: node version.js
     - name: npm build - linux mac
       if: startsWith(matrix.os, 'mac') || startsWith(matrix.os, 'ubuntu')
       run: npm run build
