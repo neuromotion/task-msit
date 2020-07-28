@@ -31,9 +31,11 @@
     "typescript": "^3.6.4"
   },
   "scripts": {
-    "start": "BROWSER=none NODE_PATH=./src react-scripts start",
+    "postinstall": "node version.js && npm run rebuild",
+    "start": "cross-env BROWSER=none NODE_PATH=./src react-scripts start",
+    "firefox": "cross-env BROWSER=firefox npm start",
     "test": "react-scripts test",
-    "prebuild": "electron-rebuild",
+    "prebuild": "npm run rebuild",
     "build": "react-scripts build",
     "package:windows": "electron-packager . --platform win32 --arch x64 --icon ./assets/icons/win/icon.ico --out dist/ --overwrite --asar ",
     "package:mac": "electron-packager . --platform darwin --arch x64 --out dist/ --icon ./assets/icons/mac/icon.icns --overwrite",
@@ -81,6 +83,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.1",
+    "execa": "^4.0.3",
     "require-context.macro": "^1.1.1"
   },
   "babel": {

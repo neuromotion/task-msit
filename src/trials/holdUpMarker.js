@@ -1,7 +1,6 @@
 import { lang } from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
-import eventMarkerMessage from '../lib/markup/eventMarkerMessage'
 
 const holdUpMarker = () => {
   let stimulus = baseStimulus(`<div>
@@ -12,11 +11,7 @@ const holdUpMarker = () => {
    return {
     type: 'html_button_response',
     stimulus: stimulus,
-    choices: [lang.prompt.continue.button],
-    on_load: () => (eventMarkerMessage()
-                      .then(s => document.getElementById('usb-alert')
-                      .innerHTML = s )
-                    )
+    choices: [lang.prompt.continue.button]
   }
 }
 

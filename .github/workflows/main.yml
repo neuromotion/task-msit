@@ -31,8 +31,6 @@ jobs:
     # install, test, build package
     - name: npm install
       run: npm install
-    - name: get git revision and branch
-      run: node version.js
     - name: npm build
       run: npm run build
     - name: npm test
