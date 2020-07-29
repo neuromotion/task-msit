@@ -1,4 +1,4 @@
-import { lang, AT_HOME } from '../config/main'
+import { lang, VIDEO } from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 
@@ -10,7 +10,7 @@ const experimentEnd = (duration) => {
     stimulus: stimulus,
     trial_duration: duration,
     on_load: () => {
-      if (AT_HOME) {
+      if (VIDEO) {
         console.log('finished')
         window.cameraCapture.stop()
         window.screenCapture.stop()

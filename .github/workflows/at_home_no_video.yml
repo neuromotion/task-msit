@@ -1,4 +1,4 @@
-name: Build at home version (Windows)
+name: Build at home version (Windows / No Video)
 
 on:
   pull_request:
@@ -29,10 +29,7 @@ jobs:
       run: npm install
     - name: npm build
       run: npm run build:win:home
-    - name: npm test
-      run: npm test
       env:
-        CI: true
         REACT_APP_AT_HOME: true
 
     # Build electron app package installers
