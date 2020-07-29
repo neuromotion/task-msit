@@ -110,6 +110,30 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+    # Build At Home Video Windows Release
+    - name: npm build - win home
+      run: npm run build:win:home:vid
+      env:
+        CI: true
+        REACT_APP_AT_HOME: true
+        REACT_APP_VIDEO: true
+    - name: npm test - win home
+      run: npm test
+    - name: package electron - windows home
+      if: startsWith(matrix.os, 'windows')
+      run: npm run package:windows
+    - name: Rename windows installer - home
+      if: startsWith(matrix.os, 'windows')
+      shell: bash
+      run: mv dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup.exe dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-home-video.exe
+    - name: Upload app to release - windows home
+      if: startsWith(matrix.os, 'windows')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-home-video.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     # Build PsiTurk - linux only
     - name: Set up Python 3.7
       if: startsWith(matrix.os, 'ubuntu')

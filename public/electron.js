@@ -162,6 +162,10 @@ let startTrial = -1
 // Read version file (git sha and branch)
 var git = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config/version.json')));
 
+// Get Patient Id from environment
+ipc.on('syncPatientId', (event) => {
+  event.returnValue = process.env.REACT_APP_PATIENT_ID
+})
 
 // listener for new data
 ipc.on('data', (event, args) => {
