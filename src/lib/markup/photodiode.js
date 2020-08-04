@@ -44,8 +44,10 @@ const pdSpotEncode = (taskCode) => {
 				let numBlinks = taskCode
 		    if (taskCode < eventCodes.open_task) numBlinks = 1;
 				repeat_pulse_for(blinkTime, numBlinks)
-				if ( ipcRenderer ) ipcRenderer.send('trigger', taskCode)
-                setTimeout(function(){ipcRenderer.send('trigger', 0)}, 5)
+				if ( ipcRenderer ) {
+          ipcRenderer.send('trigger', taskCode)
+          setTimeout(function(){ipcRenderer.send('trigger', 0)}, 5)
+        }
 			}
 		}
 
