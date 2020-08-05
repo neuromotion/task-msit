@@ -25,6 +25,7 @@ const audioCodes = {
 // is this mechanical turk?
 const MTURK = (!jsPsych.turk.turkInfo().outsideTurk)
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
+const VIDEO =  (process.env.REACT_APP_VIDEO === 'true')
 
 // get language file
 const lang = require('../language/en_us.json')
@@ -41,6 +42,7 @@ export {
 	eventCodes,
 	MTURK,
 	AT_HOME,
+	VIDEO,
 	audioCodes,
 	taskName
 

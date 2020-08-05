@@ -29,8 +29,6 @@ jobs:
     # install, test, build package
     - name: npm install
       run: npm install
-    - name: get git revision and branch
-      run: node version.js
     - name: npm build - linux mac
       if: startsWith(matrix.os, 'mac') || startsWith(matrix.os, 'ubuntu')
       run: npm run build
@@ -109,6 +107,30 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-home.exe
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    # Build At Home Video Windows Release
+    - name: npm build - win home
+      run: npm run build:win:home:vid
+      env:
+        CI: true
+        REACT_APP_AT_HOME: true
+        REACT_APP_VIDEO: true
+    - name: npm test - win home
+      run: npm test
+    - name: package electron - windows home
+      if: startsWith(matrix.os, 'windows')
+      run: npm run package:windows
+    - name: Rename windows installer - home
+      if: startsWith(matrix.os, 'windows')
+      shell: bash
+      run: mv dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup.exe dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-home-video.exe
+    - name: Upload app to release - windows home
+      if: startsWith(matrix.os, 'windows')
+      uses: softprops/action-gh-release@v1
+      with:
+        files: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup-home-video.exe
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
