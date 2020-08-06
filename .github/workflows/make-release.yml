@@ -112,7 +112,7 @@ jobs:
 
     # Build At Home Video Windows Release
     - name: npm build - win home
-      run: npm run build:win:home:vid
+      run: npm run build:win:home:video
       env:
         CI: true
         REACT_APP_AT_HOME: true
