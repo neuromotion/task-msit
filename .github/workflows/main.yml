@@ -25,7 +25,7 @@ jobs:
       with:
         node-version: 12.x
     - name: Set package version and name
-      uses: brown-ccv/gh-actions/get-package-info@master
+      uses: brown-ccv/gh-actions/get-package-info@main
       id: package_info
 
     # install, test, build package
@@ -57,19 +57,19 @@ jobs:
 
     # Upload installers to github action
     - name: upload win-installer
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: startsWith(matrix.os, 'windows')
       with:
         name: win-installer
         path: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup.exe
     - name: upload mac-installer
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: startsWith(matrix.os, 'mac')
       with:
         name: mac-installer
         path: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}.dmg
     - name: upload linux-installer
-      uses: actions/upload-artifact@master
+      uses: actions/upload-artifact@main
       if: startsWith(matrix.os, 'ubuntu')
       with:
         name: linux-installer
