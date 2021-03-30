@@ -1,21 +1,33 @@
-name: Test, Build, and Package
+name: package
 
 on:
-  pull_request:
-    paths:
-      - 'src/**'
-      - '.github/workflows/main.yml'
-      - 'public/**'
+  workflow_dispatch:
+    inputs:
+      setting:
+        description: Build for 'home' or 'clinic'
+        required: true
+        default: 'home'
+      os:
+        description: Which OS to target - 'win', 'mac', 'linux', 'all'
+        required: true
+        default: 'win'
 
 jobs:
   build:
 
     runs-on: ${{ matrix.os }}
 
+    env:
+      REACT_APP_AT_HOME: ${{ github.event.inputs.setting == 'home' }}
+
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macOS-latest, windows-latest]
+        os: ${{
+          (github.event.inputs.os == 'all' && fromJSON('["ubuntu-latest", "macOS-latest", "windows-latest"]')) ||
+           (github.event.inputs.os == 'win' && fromJSON('["windows-latest"]')) ||
+           (github.event.inputs.os == 'mac' && fromJSON('["macOS-latest"]')) ||
+           (github.event.inputs.os == 'linux' && fromJSON('["ubuntu-latest"]')) }}
 
     steps:
     # Set up js package
@@ -30,7 +42,9 @@ jobs:
 
     # install, test, build package
     - name: npm install
-      run: npm install
+      run: |
+        npm config set "//npm.pkg.github.com/:_authToken" ${{ secrets.GITHUB_TOKEN }}
+        npm install
     - name: npm build
       run: npm run build
     - name: npm test
@@ -57,22 +71,22 @@ jobs:
 
     # Upload installers to github action
     - name: upload win-installer
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@master
       if: startsWith(matrix.os, 'windows')
       with:
-        name: win-installer
+        name: ${{ format('win-installer-{0}', github.event.inputs.setting) }}
         path: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}-setup.exe
     - name: upload mac-installer
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@master
       if: startsWith(matrix.os, 'mac')
       with:
-        name: mac-installer
+        name: ${{ format('mac-installer-{0}', github.event.inputs.setting) }}
         path: dist/installers/${{ steps.package_info.outputs.package_name }}-${{ steps.package_info.outputs.package_version }}.dmg
     - name: upload linux-installer
-      uses: actions/upload-artifact@main
+      uses: actions/upload-artifact@master
       if: startsWith(matrix.os, 'ubuntu')
       with:
-        name: linux-installer
+        name: ${{ format('linux-installer-{0}', github.event.inputs.setting) }}
         path: dist/installers/${{ steps.package_info.outputs.package_name }}_${{ steps.package_info.outputs.package_version }}_x64.deb
 
     # Build PsiTurk - linux only
