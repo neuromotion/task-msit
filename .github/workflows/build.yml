@@ -16,11 +16,27 @@ jobs:
 
     env:
       REACT_APP_AT_HOME: ${{ matrix.setting == 'home' }}
+      REACT_APP_VIDEO: ${{ matrix.video == 'on' }}
 
     strategy:
       matrix:
         setting: [home, clinic]
+        video: [on, off]
         os: [ubuntu-latest, macOS-latest, windows-latest]
+        exclude: 
+          # exclude clinic video on on ubuntu-latest 
+          - os: ubuntu-latest
+            setting: clinic
+            video: on 
+          - os: macOS-latest
+            setting: clinic
+            video: on 
+          - os: ubuntu-latest
+            setting: home
+            video: on
+          - os: macOS-latest
+            setting: home
+            video: on
 
     steps:
     # Set up js package
