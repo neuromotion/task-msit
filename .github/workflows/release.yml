@@ -11,11 +11,12 @@ jobs:
 
     env:
       REACT_APP_AT_HOME: ${{ matrix.setting == 'home' }}
+      REACT_APP_VIDEO: ${{ matrix.setting == 'home:video' }}
 
     strategy:
       fail-fast: false
       matrix:
-        setting: ['home', 'clinic' ]
+        setting: ['home', 'clinic', 'home:video' ]
         os: [ubuntu-latest, macOS-latest, windows-latest]
 
 

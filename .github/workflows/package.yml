@@ -19,6 +19,7 @@ jobs:
 
     env:
       REACT_APP_AT_HOME: ${{ github.event.inputs.setting == 'home' }}
+      REACT_APP_VIDEO: ${{ github.event.inputs.setting == 'home:video' }}
 
     strategy:
       fail-fast: false
