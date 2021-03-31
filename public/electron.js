@@ -83,7 +83,11 @@ let portAvailable
 let SKIP_SENDING_DEV = false
 
 const setUpPort = async () => {
+  if (activeProductId){
+    p = await getPort(vendorId, activeProductId)
+  } else {
   p = await getPort(activeComName)
+  }
   if (p) {
     triggerPort = p
     portAvailable = true
