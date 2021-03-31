@@ -12,14 +12,17 @@ const log = require('electron-log');
 
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
 // Event Trigger
-const { eventCodes, comName } = require('./config/trigger')
+const { eventCodes, vendorId, productId, comName } = require('./config/trigger')
+const { isPort, getPort, sendToPort } = require('event-marker')
 
-// Override comName if environment variable set
-const activeComName = process.env.COMNAME || comName;
-log.info("Trigger Box comName", activeComName);
-
-const { getPort, sendToPort } = require('event-marker')
-log.info(AT_HOME)
+// Override product ID if environment variable set
+const activeProductId = process.env.EVENT_MARKER_PRODUCT_ID || productId
+const activeComName = process.env.EVENT_MARKER_COM_NAME || comName
+if (activeProductId) {
+  log.info("Active product ID", activeProductId)
+} else {
+  log.info("COM Name", activeComName)
+}
 
 // Data Saving
 const { dataDir } = require('./config/saveData')
@@ -30,16 +33,17 @@ let mainWindow
 
 function createWindow () {
   if (AT_HOME) {
-    log.info('Develop "at home" version.')
+    log.info('Task "at home" version.')
   }
   else {
-    log.info('Develop "clinic" version.')
+    log.info('Task "clinic" version.')
   }
   // Create the browser window.
   if (process.env.ELECTRON_START_URL) { // in dev mode, disable web security to allow local file loading
     mainWindow = new BrowserWindow({
       width: 1500,
       height: 900,
+      icon: './favicon.ico',
       webPreferences: {
         nodeIntegration: true,
         webSecurity: false
@@ -48,7 +52,8 @@ function createWindow () {
   } else {
     mainWindow = new BrowserWindow({
       fullscreen: true,
-      frame: AT_HOME,
+      icon: './favicon.ico',
+      frame: false,
       webPreferences: {
         nodeIntegration: true,
         webSecurity: true
