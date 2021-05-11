@@ -1,12 +1,16 @@
 import React from 'react'
 import { Experiment, jsPsych } from 'jspsych-react'
 import { tl } from './timelines/main'
-import { MTURK } from './config/main'
+import { MTURK, FIREBASE } from './config/main'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { getTurkUniqueId, sleep } from './lib/utils'
 import { rt_categorize_html } from './lib/rt-categorize-html'
+import { addToFirebase, createFirebaseDocument,} from "./firebase.js";
+
+
+
 
 const isElectron = !MTURK
 let ipcRenderer = false;
@@ -32,7 +36,20 @@ class App extends React.Component {
         <Experiment settings={{
           timeline: tl,
           on_data_update: (data) => {
-            if ( ipcRenderer ) {
+            //firebase 
+            if(FIREBASE){
+              if (data.trial_index === 1) {
+                
+                console.log(data.patient_id);// delete when done
+  
+                createFirebaseDocument(data.patient_id);
+                addToFirebase(data);
+              }
+              if (data.trial_index > 1) {
+                addToFirebase(data);
+              }
+            }
+            else if ( ipcRenderer ) {
               ipcRenderer.send('data', data)
             }
             else if (psiturk) {
