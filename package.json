@@ -86,6 +86,7 @@
     "eslint-plugin-react": "^7.14.3",
     "eslint-plugin-standard": "^4.0.1",
     "execa": "^4.0.3",
+    "firebase-tools": "^9.10.2",
     "require-context.macro": "^1.1.1"
   },
   "babel": {

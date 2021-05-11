@@ -4,7 +4,7 @@ import 'firebase/firestore';
 require("dotenv").config();
 
 // Set collection name
-const collectionName = "db_pilot_test";
+const collectionName = "participant_responses";
 
 // Firebase config
 let config = {
@@ -18,10 +18,8 @@ let config = {
 };
 
 
-
 // Get a Firestore instance
 var db = firebase.initializeApp(config).firestore();
-
 
 // Add data to db
 const createFirebaseDocument = (patientId) => {
@@ -36,6 +34,7 @@ const createFirebaseDocumentRandom = () => {
 };
 
 const addToFirebase = (data) => {
+  console.log(data)
   const patientId = data.patient_id;
   db.collection(collectionName)
     .doc(patientId)
@@ -45,12 +44,8 @@ const addToFirebase = (data) => {
 };
 
 // Export types that exists in Firestore
-// This is not always necessary, but it's used in other examples
-const { TimeStamp, GeoPoint } = firebase.firestore;
 export {
   db,
-  TimeStamp,
-  GeoPoint,
   collectionName,
   createFirebaseDocument,
   addToFirebase,
