@@ -33,6 +33,23 @@ npm run dev
 ```
 6. Check out the data - the data is saved throughout the task to the users's app directory.  This is logged at the beginning of the task wherever you ran `npm run dev`
 
+## Environment Variables
+
+1. Create .env file in root folder
+2. Set below environment variables according to firebase web app configurations:
+```
+REACT_APP_apiKey=
+REACT_APP_authDomain=
+REACT_APP_projectId=
+REACT_APP_storageBucket=
+REACT_APP_messagingSenderId=
+REACT_APP_appId=
+```
+3. Set FIREBASE variable to true:
+```
+REACT_APP_FIREBASE=true
+```
+
 ## Project Organization
 
 This project directory is organized to be very modular and composable. In general, files and functions should be relatively small and self-contained, global scope should not be used (and definitely not mutated), and only the pieces of code needed for any given file should be imported. This keeps the code maintainable with clear lineage and purpose for each piece of code. Below are descriptions of the main files and folders.
