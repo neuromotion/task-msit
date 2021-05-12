@@ -21,6 +21,11 @@ let config = {
 // Get a Firestore instance
 var db = firebase.initializeApp(config).firestore();
 
+// Use emulator if on localhost
+if (window.location.hostname === "localhost") {
+  db.useEmulator("localhost", 8080);
+}
+
 // Add data to db
 const createFirebaseDocument = (patientId) => {
   db.collection(collectionName)
