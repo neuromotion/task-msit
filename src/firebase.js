@@ -26,24 +26,41 @@ if (window.location.hostname === "localhost") {
   db.useEmulator("localhost", 8080);
 }
 
-// Add data to db
-const createFirebaseDocument = (patientId) => {
+// Add patient data and trial data to db
+const createPatient = (data) => {
+  const patientId = data.patient_id
+  const trialId = data.trial_id;
   db.collection(collectionName)
     .doc(patientId)
-    .set({ patientId, dateCreated: new Date() });
+    .set({ patient_id: patientId })
+  .then(() => {
+    db.collection(collectionName)
+    .doc(patientId)
+    .collection('trials')
+    .doc(trialId).set({patient_id: patientId, trial_id: trialId, date_created: new Date()})
+    .then(()=>{
+      console.log('success')
+    })
+    .catch((error) => {
+      window.alert("Fields don't match")
+    });
+  })
+  .catch((error) => {
+      window.alert("Fields don't match")
+  });
 };
 
-// create a document in the collection with a random id
-const createFirebaseDocumentRandom = () => {
-  db.collection(collectionName).add({ dateCreated: new Date() });
-};
-
+// Add inidividual trials to db
 const addToFirebase = (data) => {
   console.log(data)
   const patientId = data.patient_id;
+  const trialId = data.trial_id;
+  
   db.collection(collectionName)
     .doc(patientId)
-    .collection("data")
+    .collection('trials')
+    .doc(trialId)
+    .collection('data')
     .doc(`trial_${data.trial_index}`)
     .set(data);
 };
@@ -52,9 +69,8 @@ const addToFirebase = (data) => {
 export {
   db,
   collectionName,
-  createFirebaseDocument,
+  createPatient,
   addToFirebase,
-  createFirebaseDocumentRandom,
 };
 
 export default firebase;

@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { getTurkUniqueId, sleep } from './lib/utils'
 import { rt_categorize_html } from './lib/rt-categorize-html'
-import { addToFirebase, createFirebaseDocument,} from "./firebase.js";
+import { addToFirebase, createPatient,} from "./firebase.js";
 
 
 
@@ -39,11 +39,8 @@ class App extends React.Component {
             //firebase 
             if(FIREBASE){
               if (data.trial_index === 1) {
-                
-                console.log(data.patient_id);// delete when done
   
-                createFirebaseDocument(data.patient_id);
-                addToFirebase(data);
+                createPatient(data);
               }
               if (data.trial_index > 1) {
                 addToFirebase(data);

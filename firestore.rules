@@ -1,11 +1,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    
-    match /{document=**} {
+    match /participant_responses/{patient_id} {
       allow read: if false;
-      allow write: if true;
+      allow write: if exists(/databases/$(database)/documents/registered_patients/$(request.resource.data.patient_id));
+      match /trials/{trial_id}/{document=**} {
+        allow write: 
+          if patient_id == request.resource.data.patient_id &&
+             exists(/databases/$(database)/documents/registered_patients/$(patient_id)/registered_trials/$(request.resource.data.trial_id)) &&
+             trial_id == request.resource.data.trial_id;
+      }
     }
+    
   }
 }
