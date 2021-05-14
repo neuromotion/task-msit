@@ -1,9 +1,10 @@
 import experimentStart from '../trials/experimentStart'
 import startCode from '../trials/startCode'
 import userId from '../trials/userId'
+import numBlocks from '../trials/blockNumber'
 import instructions from '../trials/instructions'
 import holdUpMarker from '../trials/holdUpMarker'
-import { AT_HOME, VIDEO } from '../config/main'
+import { AT_HOME, VIDEO, MTURK } from '../config/main'
 import adjustVolume from '../trials/adjustVolume'
 import camera from '../trials/camera'
 
@@ -16,6 +17,9 @@ if (AT_HOME && !VIDEO) {
 }
 else if (AT_HOME && VIDEO) {
   tl = [experimentStart(), userId(), instructions(), camera()]
+}
+else if (!MTURK) {
+  tl = [experimentStart(), userId(), numBlocks(), adjustVolume(), holdUpMarker(), startCode(), instructions()]
 }
 else {
   tl = [experimentStart(), userId(), adjustVolume(), holdUpMarker(), startCode(), instructions()]
