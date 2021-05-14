@@ -7,7 +7,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { getTurkUniqueId, sleep } from './lib/utils'
 import { rt_categorize_html } from './lib/rt-categorize-html'
-import { addToFirebase, createPatient} from "./firebase.js";
+import { addToFirebase, createPatient, addToEnd} from "./firebase.js";
 
 
 
@@ -55,7 +55,11 @@ class App extends React.Component {
             }
           },
           on_finish: (data) => {
-            if ( ipcRenderer ) {
+            if (FIREBASE){
+              const array = data.values()
+              addToEnd(array[0].patient_id, array[0].study_id, array)
+            }
+            else if ( ipcRenderer ) {
               ipcRenderer.send('end', 'true')
             }
             else if (psiturk) {

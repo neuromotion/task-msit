@@ -4,7 +4,7 @@ import 'firebase/firestore';
 require("dotenv").config();
 
 // Set collection name
-const collectionName = "participant_responses";
+const collectionName = "patient_responses";
 
 // Firebase config
 let config = {
@@ -50,6 +50,17 @@ const createPatient = (data) => {
   });
 };
 
+const addToEnd = (patientId, studyId, data) =>{
+  //const patientId = data.patient_id;
+  //const studyId = data.study_id;
+  db.collection(collectionName)
+    .doc(studyId)
+    .collection('patients')
+    .doc(patientId)
+    .set({data:data},{merge:true})
+}
+
+
 // Add inidividual trials to db
 const addToFirebase = (data) => {
   console.log(data)
@@ -71,6 +82,7 @@ export {
   collectionName,
   createPatient,
   addToFirebase,
+  addToEnd
 };
 
 export default firebase;
