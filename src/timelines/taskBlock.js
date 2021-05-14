@@ -3,7 +3,6 @@ import interference from '../trials/interference'
 import accuracy from '../trials/accuracy'
 import trainingBlock from '../config/pcps_msit_eeg_train_sequence.json'
 import mainBlock from '../config/pcps_msit_eeg_trial_sequence.json'
-import { jsPsych } from 'jspsych-react'
 
 const taskBlock = (training) => {
 	const block = training ? trainingBlock : mainBlock;

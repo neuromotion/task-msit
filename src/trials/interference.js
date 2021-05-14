@@ -1,7 +1,6 @@
 import interferenceTrial  from '../lib/markup/trial'
 import { pdSpotEncode, photodiodeGhostBox } from '../lib/markup/photodiode'
 import { eventCodes, lang } from '../config/main'
-import { jsPsych } from 'jspsych-react'
 
 const interference = (trial) => {
 

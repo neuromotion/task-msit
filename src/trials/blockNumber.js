@@ -1,5 +1,5 @@
-import { lang, MTURK } from '../config/main'
-import { getBlockNumber, getTurkUniqueId } from '../lib/utils'
+import { lang } from '../config/main'
+import { getBlockNumber } from '../lib/utils'
 import { baseStimulus } from '../lib/markup/stimuli'
 
 const numBlocks = () => {
