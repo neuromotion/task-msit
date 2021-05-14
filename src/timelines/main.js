@@ -6,7 +6,7 @@ import { MTURK } from '../config/main'
 
 const primaryTimeline = [
         preamble,
-        //taskBlock(true),
+        taskBlock(true),
         taskBlock(false),
         experimentEnd(3000)
         ]
