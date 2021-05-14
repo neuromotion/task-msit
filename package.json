@@ -54,7 +54,9 @@
     "dev:clinic": "cross-env REACT_APP_AT_HOME=\"false\" npm run dev",
     "build:clinic": "cross-env REACT_APP_AT_HOME=\"false\" npm run build",
     "build:home": "cross-env REACT_APP_AT_HOME=\"true\" npm run build",
-    "build:home:video": "cross-env REACT_APP_AT_HOME=\"true\" REACT_APP_VIDEO=\"true\" npm run build"
+    "build:home:video": "cross-env REACT_APP_AT_HOME=\"true\" REACT_APP_VIDEO=\"true\" npm run build",
+    "firebase:dev": "firebase emulators:start --import emulator_data",
+    "firebase:savedev": "firebase emulators:export emulator_data"
   },
   "eslintConfig": {
     "extends": "react-app"

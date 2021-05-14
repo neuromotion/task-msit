@@ -29,15 +29,15 @@ if (window.location.hostname === "localhost") {
 // Add patient data and trial data to db
 const createPatient = (data) => {
   const patientId = data.patient_id
-  const trialId = data.trial_id;
+  const studyId = data.study_id;
   db.collection(collectionName)
-    .doc(patientId)
-    .set({ patient_id: patientId })
+    .doc(studyId)
+    .set({ study_id: studyId, date_created: new Date() })
   .then(() => {
     db.collection(collectionName)
-    .doc(patientId)
-    .collection('trials')
-    .doc(trialId).set({patient_id: patientId, trial_id: trialId, date_created: new Date()})
+    .doc(studyId)
+    .collection('patients')
+    .doc(patientId).set({patient_id: patientId, study_id: studyId, date_created: new Date()})
     .then(()=>{
       console.log('success')
     })
@@ -54,12 +54,12 @@ const createPatient = (data) => {
 const addToFirebase = (data) => {
   console.log(data)
   const patientId = data.patient_id;
-  const trialId = data.trial_id;
+  const studyId = data.study_id;
   
   db.collection(collectionName)
+    .doc(studyId)
+    .collection('patients')
     .doc(patientId)
-    .collection('trials')
-    .doc(trialId)
     .collection('data')
     .doc(`trial_${data.trial_index}`)
     .set(data);

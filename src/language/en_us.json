@@ -58,9 +58,9 @@
     "practice_trials": "We will practice with some example trials. <br> Remember, respond only to the identity of the number that is different, not the position of the number."
   },
   "userid": {
-    "set": "Please enter patient ID and trial ID.",
+    "set": "Please enter patient ID and study ID.",
     "patientID": "Patient ID",
-    "trialID": "Trial ID"
+    "studyID": "Study ID"
   },
   "eventMarker" : {
     "found": "Hold the USB event marker in front of the camera.",

@@ -82,10 +82,10 @@ const getUserId = (data) => {
 }
 
 // Get Trial id
-const getTrialId = (data) => {
-  const trialId = JSON.parse(data.responses)['Q1']
-  jsPsych.data.addProperties({trial_id: trialId, timestamp: Date.now()})
-  console.log("TrialID", trialId)
+const getStudyId = (data) => {
+  const studyId = JSON.parse(data.responses)['Q1']
+  jsPsych.data.addProperties({study_id: studyId, timestamp: Date.now()})
+  console.log("StudyID", studyId)
 }
 
 
@@ -113,7 +113,7 @@ export {
   images,
   startKeypressListener,
   getUserId,
-  getTrialId,
+  getStudyId,
   getTurkUniqueId,
   sleep,
   removeCursor,
