@@ -32,30 +32,32 @@ import { jsPsych } from 'jspsych-react'
     }
     
     return (
-        <div className="Login">
-          <Form onSubmit={handleSubmit}>
-            <Form.Group size="lg" controlId="patientId">
-              <Form.Label>PatientId</Form.Label>
-              <Form.Control
-                autoFocus
-                type="patientId"
-                value={patientId}
-                onChange={(e) => setPatient(e.target.value)}
-              />
-            </Form.Group>
-            <Form.Group size="lg" controlId="studyId">
-              <Form.Label>StudyId</Form.Label>
-              <Form.Control
-                type="studyId"
-                value={studyId}
-                onChange={(e) => setStudy(e.target.value)}
-              />
-            </Form.Group>
-            <Button block size="lg" type="submit" disabled={!validateForm()}>
-              Login
-            </Button>
-          </Form>
-        </div>
+        <div className="centered-h-v">
+      <div className="width-50">
+      <Form className="centered-h-v" onSubmit={handleSubmit}>
+        <Form.Group className="width-100" size="lg" controlId="patientId">
+          <Form.Label>PatientId</Form.Label>
+          <Form.Control
+            autoFocus
+            type="patientId"
+            value={patientId}
+            onChange={(e) => setPatient(e.target.value)}
+          />
+        </Form.Group>
+        <Form.Group className="width-100" size="lg" controlId="studyId">
+          <Form.Label>StudyId</Form.Label>
+          <Form.Control
+            type="studyId"
+            value={studyId}
+            onChange={(e) => setStudy(e.target.value)}
+          />
+        </Form.Group>
+        <Button style={{width: "100%"}} block size="lg" type="submit" disabled={!validateForm()}>
+          Login
+        </Button>
+      </Form>
+      </div>
+    </div>
       );
     }
 
