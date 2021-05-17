@@ -1,5 +1,6 @@
 import React from 'react'
 import { Experiment, jsPsych } from 'jspsych-react'
+import { Redirect, BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { tl } from './timelines/main'
 import { MTURK, FIREBASE } from './config/main'
 import './App.css'
@@ -7,11 +8,12 @@ import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { getTurkUniqueId, sleep } from './lib/utils'
 import { rt_categorize_html } from './lib/rt-categorize-html'
-import { addToFirebase, createPatient, addToEnd} from "./firebase.js";
+import { addToFirebase, createPatient} from "./firebase.js";
+import Login from './login'
 
 
 
-
+var LOGGEDIN = false
 const isElectron = !MTURK
 let ipcRenderer = false;
 let psiturk = false
@@ -25,7 +27,9 @@ if (isElectron) {
   /* eslint-enable */
 }
 
-class App extends React.Component {
+
+
+class ExpStart extends React.Component {
   render() {
     console.log("Outside Turk:", jsPsych.turk.turkInfo().outsideTurk)
     console.log("Turk:", MTURK)
@@ -40,7 +44,7 @@ class App extends React.Component {
             if(FIREBASE){
               if (data.trial_index === 1) {
   
-                createPatient(data);
+                createPatient(data.patient_id, data.study_id);
                 //addToFirebase(data)
               }
               if (data.trial_index > 1) {
@@ -55,11 +59,8 @@ class App extends React.Component {
             }
           },
           on_finish: (data) => {
-            if (FIREBASE){
-              const array = data.values()
-              addToEnd(array[0].patient_id, array[0].study_id, array)
-            }
-            else if ( ipcRenderer ) {
+            
+            if ( ipcRenderer ) {
               ipcRenderer.send('end', 'true')
             }
             else if (psiturk) {
@@ -74,6 +75,23 @@ class App extends React.Component {
         }}
         />
       </div>
+    );
+  }
+}
+
+class App extends React.Component {
+  render() {
+    return (
+      <>
+        <Router>
+          <Switch>
+          <Route exact path="/">
+            {LOGGEDIN ? <Redirect to="/experiment" /> : <Login/>}
+          </Route>
+            <Route path='/experiment' component={ExpStart} />
+          </Switch>
+        </Router>
+      </>
     );
   }
 }

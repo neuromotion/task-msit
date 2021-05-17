@@ -4,7 +4,7 @@ import 'firebase/firestore';
 require("dotenv").config();
 
 // Set collection name
-const collectionName = "patient_responses";
+const collectionName = "participant_responses";
 
 // Firebase config
 let config = {
@@ -27,51 +27,56 @@ if (window.location.hostname === "localhost") {
 }
 
 // Add patient data and trial data to db
-const createPatient = (data) => {
-  const patientId = data.patient_id
-  const studyId = data.study_id;
-  db.collection(collectionName)
+const createPatient = (patientId, studyId) => {
+  // return promise with value true if patient and study id match, false otherwise
+  return db.collection(collectionName)
     .doc(studyId)
-    .set({ study_id: studyId, date_created: new Date() })
+    .set({ study_id: studyId })
   .then(() => {
-    db.collection(collectionName)
+    return db.collection(collectionName)
     .doc(studyId)
-    .collection('patients')
-    .doc(patientId).set({patient_id: patientId, study_id: studyId, date_created: new Date()})
+    .collection('participants')
+    .doc(patientId).set({participant_id: patientId})
     .then(()=>{
       console.log('success')
+      return true
     })
     .catch((error) => {
       window.alert("Fields don't match")
+      return false
     });
   })
   .catch((error) => {
       window.alert("Fields don't match")
+      return false
   });
 };
 
+/*
 const addToEnd = (patientId, studyId, data) =>{
   //const patientId = data.patient_id;
   //const studyId = data.study_id;
   db.collection(collectionName)
     .doc(studyId)
-    .collection('patients')
+    .collection('participants')
     .doc(patientId)
     .set({data:data},{merge:true})
 }
-
+*/
 
 // Add inidividual trials to db
 const addToFirebase = (data) => {
   console.log(data)
   const patientId = data.patient_id;
   const studyId = data.study_id;
+  var nowDate = new Date(); 
+  var date = nowDate.getFullYear()+'-'+(nowDate.getMonth()+1)+'-'+nowDate.getDate()+'3';
   
   db.collection(collectionName)
     .doc(studyId)
-    .collection('patients')
+    .collection('participants')
     .doc(patientId)
-    .collection('data')
+    .collection(date)
     .doc(`trial_${data.trial_index}`)
     .set(data);
 };
@@ -81,8 +86,7 @@ export {
   db,
   collectionName,
   createPatient,
-  addToFirebase,
-  addToEnd
+  addToFirebase
 };
 
 export default firebase;

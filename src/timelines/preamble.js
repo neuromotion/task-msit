@@ -18,7 +18,7 @@ else if (AT_HOME && VIDEO) {
   tl = [experimentStart(), userId(), instructions(), camera()]
 }
 else {
-  tl = [experimentStart(), userId(), adjustVolume(), holdUpMarker(), startCode(), instructions()]
+  tl = [experimentStart(), /*userId(), */adjustVolume(), holdUpMarker(), startCode(), instructions()]
 }
 const preamble = {
   type: 'html_keyboard_response',
