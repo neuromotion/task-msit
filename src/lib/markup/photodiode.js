@@ -1,9 +1,9 @@
-import { MTURK, AT_HOME } from  '../../config/main'
+import { MTURK, AT_HOME, IS_ELECTRON } from  '../../config/main'
 import { eventCodes } from '../../config/trigger'
 import $ from 'jquery'
 
 // conditionally load electron and psiturk based on MTURK config variable
-const isElectron = !MTURK
+const isElectron = IS_ELECTRON//!MTURK
 let ipcRenderer = false;
 if (isElectron) {
   const electron = window.require('electron');

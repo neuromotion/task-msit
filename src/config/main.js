@@ -29,9 +29,19 @@ const audioCodes = {
 const MTURK = (!jsPsych.turk.turkInfo().outsideTurk)
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
 const VIDEO =  (process.env.REACT_APP_VIDEO === 'true')
+const ONLINE = (process.env.REACT_APP_ONLINE=== 'true')
 
 // is this firebase?
 const FIREBASE = (process.env.REACT_APP_FIREBASE === 'true')
+
+let IS_ELECTRON = !ONLINE;
+
+try {
+	window.require("electron");
+  } catch {
+	IS_ELECTRON = false;
+  }
+
 
 // get language file
 const lang = require('../language/en_us.json')
@@ -48,6 +58,7 @@ export {
 	eventCodes,
 	MTURK,
 	AT_HOME,
+	IS_ELECTRON,
 	VIDEO,
 	FIREBASE,
 	audioCodes,

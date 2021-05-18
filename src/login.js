@@ -5,11 +5,13 @@ import {createPatient} from './firebase'
 import { useHistory } from 'react-router-dom';
 import { jsPsych } from 'jspsych-react'
 
-
-
  function Login() {
+    const dateTimestamp = Date.now()
+    const curDate = new Date(dateTimestamp)
     const [patientId, setPatient] = useState("");
     const [studyId, setStudy] = useState("")
+    const [startDate, setDate] = useState(curDate.toString())
+    const [timestamp, setTimestamp] = useState(dateTimestamp.toString())
     const history = useHistory();
 
     function validateForm() {
@@ -19,11 +21,10 @@ import { jsPsych } from 'jspsych-react'
     function handleSubmit(e) {
         e.preventDefault();
         const logPatient = async() =>{
-            const loggedIn = await createPatient(patientId, studyId)
+            const loggedIn = await createPatient(patientId, studyId, startDate, timestamp)
             
             if(loggedIn){
-                jsPsych.data.addProperties({patient_id: patientId, timestamp: Date.now()})
-                jsPsych.data.addProperties({study_id: studyId, timestamp: Date.now()})
+                jsPsych.data.addProperties({patient_id: patientId, study_id: studyId, timestamp: timestamp, start_date: startDate})
                 history.push('/experiment')
             }
             

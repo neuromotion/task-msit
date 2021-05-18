@@ -1,10 +1,15 @@
-import { lang, taskName, AT_HOME } from '../config/main'
+import { lang, taskName, AT_HOME , IS_ELECTRON} from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 import { jsPsych } from 'jspsych-react'
 
-const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
+
+const isElectron = IS_ELECTRON//!MTURK
+let ipcRenderer = false;
+if (isElectron) {
+  const electron = window.require('electron');
+  ipcRenderer  = electron.ipcRenderer;
+}
 
 function saveBlob(blob, media, patientId) {
   let reader = new FileReader()
