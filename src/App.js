@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import '@fortawesome/fontawesome-free/css/all.css'
 import { getTurkUniqueId, sleep } from './lib/utils'
 import { rt_categorize_html } from './lib/rt-categorize-html'
-import { addToFirebase, createPatient} from "./firebase.js";
+import { addToFirebase } from "./firebase.js";
 import Login from './login'
 
 

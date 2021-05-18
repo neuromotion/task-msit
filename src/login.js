@@ -10,8 +10,8 @@ import { jsPsych } from 'jspsych-react'
     const curDate = new Date(dateTimestamp)
     const [patientId, setPatient] = useState("");
     const [studyId, setStudy] = useState("")
-    const [startDate, setDate] = useState(curDate.toString())
-    const [timestamp, setTimestamp] = useState(dateTimestamp.toString())
+    const [startDate] = useState(curDate.toString())
+    const [timestamp] = useState(dateTimestamp.toString())
     const history = useHistory();
 
     function validateForm() {

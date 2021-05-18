@@ -1,4 +1,4 @@
-import { MTURK, AT_HOME, IS_ELECTRON } from  '../../config/main'
+import { AT_HOME, IS_ELECTRON } from  '../../config/main'
 import { eventCodes } from '../../config/trigger'
 import $ from 'jquery'
 

@@ -98,7 +98,6 @@ const addToFirebase = (data) => {
   const patientId = data.patient_id;
   const studyId = data.study_id;
   const timestamp = data.timestamp
-  const startDate = data.start_date;
   
   db.collection(collectionName)
     .doc(studyId)
