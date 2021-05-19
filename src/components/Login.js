@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { createPatient } from "../firebase";
@@ -8,7 +8,7 @@ import "bootstrap/dist/css/bootstrap.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import LoginContext from "../contexts/LoginContext";
 
-function Login() {
+function Login({ipcRenderer}) {
   // State variables for login screen
   const dateTimestamp = Date.now();
   const curDate = new Date(dateTimestamp);
@@ -19,6 +19,21 @@ function Login() {
 
   // Take login context
   const { login } = useContext(LoginContext);
+
+  useEffect(()=>{
+    // Loads environment patientId and studyId to autofill
+    if (ipcRenderer){
+      const envPatientId = ipcRenderer.sendSync('syncPatientId')
+      const envStudyId = ipcRenderer.sendSync('syncStudyId')
+      console.log(envPatientId)
+      if (envPatientId!=null){
+        setPatient(envPatientId)
+      }
+      if (envStudyId!=null){
+        setStudy(envStudyId)
+      }
+    }
+  },[ipcRenderer])
 
   // Checks if forms are filled in
   function validateForm() {

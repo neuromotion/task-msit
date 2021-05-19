@@ -34,7 +34,7 @@ function App() {
       {loggedIn ? (
         <JsPsychExperiment ipcRenderer={ipcRenderer} psiturk={psiturk} />
       ) : (
-        <Login />
+        <Login ipcRenderer={ipcRenderer}/>
       )}
     </LoginContext.Provider>
   );

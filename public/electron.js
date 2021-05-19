@@ -9,6 +9,7 @@ const ipc = require('electron').ipcMain
 const _ = require('lodash')
 const fs = require('fs-extra')
 const log = require('electron-log');
+require("dotenv").config();
 
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
 // Event Trigger
@@ -174,6 +175,11 @@ var git = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config/version.jso
 // Get Patient Id from environment
 ipc.on('syncPatientId', (event) => {
   event.returnValue = process.env.REACT_APP_PATIENT_ID
+})
+
+// Get Study Id from environment
+ipc.on('syncStudyId', (event) => {
+  event.returnValue = process.env.REACT_APP_STUDY_ID
 })
 
 // listener for new data
