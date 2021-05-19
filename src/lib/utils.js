@@ -75,19 +75,6 @@ const getTurkUniqueId = () => {
   return uniqueId
 }
 
-const getUserId = (data) => {
-  const patientId = JSON.parse(data.responses)['Q0']
-  jsPsych.data.addProperties({patient_id: patientId, timestamp: Date.now()})
-  console.log("PatientID", patientId)
-}
-
-// Get Trial id
-const getStudyId = (data) => {
-  const studyId = JSON.parse(data.responses)['Q1']
-  jsPsych.data.addProperties({study_id: studyId, timestamp: Date.now()})
-  console.log("StudyID", studyId)
-}
-
 
 const beep = (audioCodes) => {
   const context = new AudioContext()
@@ -112,8 +99,6 @@ export {
   generateWaitSet,
   images,
   startKeypressListener,
-  getUserId,
-  getStudyId,
   getTurkUniqueId,
   sleep,
   removeCursor,

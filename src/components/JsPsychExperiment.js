@@ -1,0 +1,57 @@
+
+import React from 'react'
+import { Experiment, jsPsych } from 'jspsych-react'
+import { tl } from '../timelines/main'
+import { MTURK, FIREBASE} from '../config/main'
+import '../App.css'
+import 'bootstrap/dist/css/bootstrap.css'
+import '@fortawesome/fontawesome-free/css/all.css'
+import { sleep } from '../lib/utils'
+import { rt_categorize_html } from '../lib/rt-categorize-html'
+import { addToFirebase } from "../firebase.js";
+
+
+
+function JsPsychExperiment({ ipcRenderer, psiturk }) {
+    
+    console.log("Outside Turk:", jsPsych.turk.turkInfo().outsideTurk)
+    console.log("Turk:", MTURK)
+    jsPsych.plugins['rt-categorize-html'] = rt_categorize_html();
+      
+      return (
+        <div className="App">
+          <Experiment settings={{
+            timeline: tl,
+            on_data_update: (data) => {
+              //firebase 
+              if(FIREBASE){
+                addToFirebase(data);
+              }
+              else if ( ipcRenderer ) {
+                ipcRenderer.send('data', data)
+              }
+              else if (psiturk) {
+                  psiturk.recordTrialData(data)
+              }
+            },
+            on_finish: (data) => {
+              
+              if ( ipcRenderer ) {
+                ipcRenderer.send('end', 'true')
+              }
+              else if (psiturk) {
+                const completePsiturk = async () => {
+                  psiturk.saveData()
+                  await sleep(5000)
+                  psiturk.completeHIT()
+                }
+                completePsiturk()
+              }
+            },
+          }}
+          />
+        </div>
+      );
+    }
+export default JsPsychExperiment
+  

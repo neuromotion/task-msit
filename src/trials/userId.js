@@ -1,5 +1,5 @@
 import { lang, MTURK } from '../config/main'
-import { getUserId, getStudyId, getTurkUniqueId } from '../lib/utils'
+import { getTurkUniqueId } from '../lib/utils'
 import { baseStimulus } from '../lib/markup/stimuli'
 
 
@@ -28,8 +28,7 @@ const userId = () => {
       questions: [{ prompt: baseStimulus(`<h1>${lang.userid.set}</h1>`, true), value: envPatientId===null?lang.userid.patientID: envPatientId},
       {prompt: '', value: envStudyId===null?lang.userid.studyID: envStudyId}],
       on_finish: (data) => {
-        getUserId(data)
-        getStudyId(data)
+    
       }
       
     }

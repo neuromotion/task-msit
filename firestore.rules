@@ -4,8 +4,7 @@ service cloud.firestore {
     match /participant_responses/{study_id}/participants/{participant_id}/data/{document=**} {
           allow read: if false
           allow create, update: 
-          if participant_id in get(/databases/$(database)/documents/registered_studies/$(study_id)).data.registered_participants &&
-              exists(/databases/$(database)/documents/registered_studies/$(study_id));
+          if participant_id in get(/databases/$(database)/documents/registered_studies/$(study_id)).data.registered_participants;
       }   
     }
 }
