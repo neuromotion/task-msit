@@ -37,7 +37,6 @@ const createPatient = (patientId, studyId, startDate, timestamp) => {
     .doc(timestamp)
     .set({start_time: startDate, app_version: window.navigator.appVersion, app_platform: window.navigator.platform, results: []})
     .then(()=>{
-      console.log('success')
       return true
     })
     .catch((error) => {

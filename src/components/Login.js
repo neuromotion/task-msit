@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { createPatient } from "../firebase";
@@ -6,9 +6,8 @@ import { jsPsych } from "jspsych-react";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "@fortawesome/fontawesome-free/css/all.css";
-import LoginContext from "../contexts/LoginContext";
 
-function Login({ipcRenderer}) {
+function Login({ipcRenderer, callBack}) {
   // State variables for login screen
   const dateTimestamp = Date.now();
   const curDate = new Date(dateTimestamp);
@@ -17,15 +16,11 @@ function Login({ipcRenderer}) {
   const [startDate] = useState(curDate.toString());
   const [timestamp] = useState(dateTimestamp.toString());
 
-  // Take login context
-  const { login } = useContext(LoginContext);
-
   useEffect(()=>{
     // Loads environment patientId and studyId to autofill
     if (ipcRenderer){
       const envPatientId = ipcRenderer.sendSync('syncPatientId')
       const envStudyId = ipcRenderer.sendSync('syncStudyId')
-      console.log(envPatientId)
       if (envPatientId!=null){
         setPatient(envPatientId)
       }
@@ -34,6 +29,7 @@ function Login({ipcRenderer}) {
       }
     }
   },[ipcRenderer])
+
 
   // Checks if forms are filled in
   function validateForm() {
@@ -60,7 +56,7 @@ function Login({ipcRenderer}) {
           timestamp: timestamp,
           start_date: startDate,
         });
-        login();
+        callBack();
       }
     };
     logPatient();

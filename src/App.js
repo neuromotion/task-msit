@@ -6,13 +6,10 @@ import Login from "./components/Login";
 import JsPsychExperiment from "./components/JsPsychExperiment";
 import { MTURK, IS_ELECTRON } from "./config/main";
 import { getTurkUniqueId } from "./lib/utils";
-import LoginContext from "./contexts/LoginContext";
 
 function App() {
-  // Variables for login context
+  // Variables for login
   const [loggedIn, setLogin] = useState(false);
-  const login = () => setLogin(true);
-
   const [ipcRenderer, setRenderer] = useState(false);
   const [psiturk, setPsiturk] = useState(false);
 
@@ -29,14 +26,19 @@ function App() {
     }
   }, []);
 
+  // Callback function for when login
+  const handleCallBack = () => {
+    setLogin(true)
+  }
+
   return (
-    <LoginContext.Provider value={{ loggedIn, login }}>
+    <>
       {loggedIn ? (
         <JsPsychExperiment ipcRenderer={ipcRenderer} psiturk={psiturk} />
       ) : (
-        <Login ipcRenderer={ipcRenderer}/>
+        <Login ipcRenderer={ipcRenderer} callBack = {handleCallBack}/>
       )}
-    </LoginContext.Provider>
+    </>
   );
 }
 
