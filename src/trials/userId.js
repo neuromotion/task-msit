@@ -18,21 +18,6 @@ const userId = () => {
       }
     }
   }
-  else {
-    const ipcRenderer = window.require('electron').ipcRenderer;
-    const envPatientId = ipcRenderer.sendSync('syncPatientId')
-    const envStudyId = ipcRenderer.sendSync('syncPatientId')
-
-    return {
-      type: 'survey_text',
-      questions: [{ prompt: baseStimulus(`<h1>${lang.userid.set}</h1>`, true), value: envPatientId===null?lang.userid.patientID: envPatientId},
-      {prompt: '', value: envStudyId===null?lang.userid.studyID: envStudyId}],
-      on_finish: (data) => {
-    
-      }
-      
-    }
-  }
 }
 
 export default userId

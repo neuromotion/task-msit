@@ -1,6 +1,5 @@
 import experimentStart from '../trials/experimentStart'
 import startCode from '../trials/startCode'
-import userId from '../trials/userId'
 import instructions from '../trials/instructions'
 import holdUpMarker from '../trials/holdUpMarker'
 import { AT_HOME, VIDEO } from '../config/main'
@@ -12,10 +11,10 @@ console.log('env at home', process.env.REACT_APP_AT_HOME)
 
 let tl
 if (AT_HOME && !VIDEO) {
-  tl = [experimentStart(), userId(), instructions()]
+  tl = [experimentStart(), instructions()]
 }
 else if (AT_HOME && VIDEO) {
-  tl = [experimentStart(), userId(), instructions(), camera()]
+  tl = [experimentStart(), instructions(), camera()]
 }
 else {
   tl = [experimentStart(), adjustVolume(), holdUpMarker(), startCode(), instructions()]

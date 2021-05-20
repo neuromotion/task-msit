@@ -29,17 +29,18 @@ const audioCodes = {
 const MTURK = (!jsPsych.turk.turkInfo().outsideTurk)
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
 const VIDEO =  (process.env.REACT_APP_VIDEO === 'true')
-const ONLINE = (process.env.REACT_APP_ONLINE=== 'true')
+var IS_ELECTRON = (process.env.REACT_APP_IS_ELECTRON === 'true')
+const PROLIFIC = (process.env.REACT_APP_PROLIFIC === 'true')
 
 // is this firebase?
 const FIREBASE = (process.env.REACT_APP_FIREBASE === 'true')
 
-let IS_ELECTRON = !ONLINE;
-
+// Could work on this logic
 try {
 	window.require("electron");
   } catch {
-	IS_ELECTRON = false;
+	window.alert("Not electron")
+	IS_ELECTRON = false
   }
 
 
@@ -59,6 +60,7 @@ export {
 	MTURK,
 	AT_HOME,
 	IS_ELECTRON,
+	PROLIFIC,
 	VIDEO,
 	FIREBASE,
 	audioCodes,

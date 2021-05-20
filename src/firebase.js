@@ -26,13 +26,13 @@ if (window.location.hostname === "localhost") {
   db.useEmulator("localhost", 8080);
 }
 
-// Add patient data and trial data to db
-const createPatient = (patientId, studyId, startDate, timestamp) => {
-  // return promise with value true if patient and study id match, false otherwise
+// Add participant data and trial data to db
+const validateParticipant = (participantId, studyId, startDate, timestamp) => {
+  // return promise with value true if participant and study id match, false otherwise
     return db.collection(collectionName)
     .doc(studyId)
     .collection('participants')
-    .doc(patientId)
+    .doc(participantId)
     .collection('data')
     .doc(timestamp)
     .set({start_time: startDate, app_version: window.navigator.appVersion, app_platform: window.navigator.platform, results: []})
@@ -48,14 +48,14 @@ const createPatient = (patientId, studyId, startDate, timestamp) => {
 // Add inidividual trials to db
 const addToFirebase = (data) => {
   console.log(data)
-  const patientId = data.patient_id;
+  const participantId = data.participant_id;
   const studyId = data.study_id;
   const timestamp = data.timestamp
   
   db.collection(collectionName)
     .doc(studyId)
     .collection('participants')
-    .doc(patientId)
+    .doc(participantId)
     .collection('data')
     .doc(timestamp)
     .update('results', firebase.firestore.FieldValue.arrayUnion(data))
@@ -65,7 +65,7 @@ const addToFirebase = (data) => {
 export {
   db,
   collectionName,
-  createPatient,
+  validateParticipant,
   addToFirebase
 };
 

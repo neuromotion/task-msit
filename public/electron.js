@@ -164,7 +164,7 @@ ipc.on('trigger', (event, args) => {
 let stream = false
 let fileName = ''
 let filePath = ''
-let patientID = ''
+let participantID = ''
 let images = []
 let startTrial = -1
 
@@ -172,24 +172,20 @@ let startTrial = -1
 // Read version file (git sha and branch)
 var git = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config/version.json')));
 
-// Get Patient Id from environment
-ipc.on('syncPatientId', (event) => {
-  event.returnValue = process.env.REACT_APP_PATIENT_ID
+// Get Participant Id and Study Id from environment
+ipc.on('syncCredentials', (event) => {
+  event.returnValue = [process.env.REACT_APP_PARTICIPANT_ID, process.env.REACT_APP_STUDY_ID]
 })
 
-// Get Study Id from environment
-ipc.on('syncStudyId', (event) => {
-  event.returnValue = process.env.REACT_APP_STUDY_ID
-})
 
 // listener for new data
 ipc.on('data', (event, args) => {
 
   // initialize file - we got a patinet_id to save the data to
-  if (args.patient_id && fileName === '') {
+  if (args.participant_id && fileName === '') {
     const dir = app.getPath('userData')
-    patientID = args.patient_id
-    fileName = `pid_${patientID}_${Date.now()}.json`
+    participantID = args.participant_id
+    fileName = `pid_${participantID}_${Date.now()}.json`
     filePath = path.resolve(dir, fileName)
     startTrial = args.trial_index
     log.warn(filePath)
@@ -207,7 +203,7 @@ ipc.on('data', (event, args) => {
     //write the data
     stream.write(JSON.stringify({...args, git}))
 
-    // Copy provocation images to patient's data folder
+    // Copy provocation images to participant's data folder
     if (args.trial_type === 'image_keyboard_response') images.push(args.stimulus.slice(7))
   }
 })
@@ -220,7 +216,7 @@ ipc.on('save_video', (event, fileName, buffer) => {
   const name = app.getName()
   const today = new Date(Date.now())
   const date = today.toISOString().slice(0,10)
-  const fullPath = path.join(desktop, dataDir, `${patientID}`, date, name, fileName)
+  const fullPath = path.join(desktop, dataDir, `${participantID}`, date, name, fileName)
   fs.outputFile(fullPath, buffer, err => {
       if (err) {
           event.sender.send(ERROR, err.message)
@@ -302,7 +298,7 @@ app.on('will-quit', () => {
     const name = app.getName()
     const today = new Date(Date.now())
     const date = today.toISOString().slice(0,10)
-    const copyPath = path.join(desktop, dataDir, `${patientID}`, date, name)
+    const copyPath = path.join(desktop, dataDir, `${participantID}`, date, name)
     fs.mkdir(copyPath, { recursive: true }, (err) => {
       log.error(err)
       fs.copyFileSync(filePath, path.join(copyPath, fileName))

@@ -11,9 +11,9 @@ if (isElectron) {
   ipcRenderer  = electron.ipcRenderer;
 }
 
-function saveBlob(blob, media, patientId) {
+function saveBlob(blob, media, participantId) {
   let reader = new FileReader()
-  let fileName =`pid_${patientId}_${media}_${Date.now()}.webm`
+  let fileName =`pid_${participantId}_${media}_${Date.now()}.webm`
   reader.onload = function() {
       if (reader.readyState === 2) {
           var buffer = new Buffer(reader.result)
@@ -43,7 +43,7 @@ const camera = () => {
     on_load: () => {
       // Grab elements, create settings, etc.
       // Elements for taking the snapshot
-      const patientId = jsPsych.data.get().values()[0].patient_id
+      const participantId = jsPsych.data.get().values()[0].participant_id
 
       let camera = document.getElementById('camera');
 
@@ -67,7 +67,7 @@ const camera = () => {
     
         window[recorder].addEventListener('stop', function() {
           const blob = new Blob(recordedChunks)
-          saveBlob(blob, recorder, patientId)
+          saveBlob(blob, recorder, participantId)
         });
     
       };
