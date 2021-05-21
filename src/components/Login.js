@@ -1,67 +1,48 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import {  validateParticipant } from "../firebase";
 import { jsPsych } from "jspsych-react";
 import "../App.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 
-function Login({onLogin, participant_id, study_id, validation}) {
+function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
   // State variables for login screen
   const dateTimestamp = Date.now();
   const curDate = new Date(dateTimestamp);
-  const [participantId, setParticipant] = useState('');
-  const [studyId, setStudy] = useState('');
   const [startDate] = useState(curDate.toString());
   const [timestamp] = useState(dateTimestamp.toString());
+  const [participantId, setParticipant] = useState("");
+  const [studyId, setStudy] = useState("");
 
-  useEffect(()=>{
-    setParticipant(participant_id)
-    setStudy(study_id)
-  },[participant_id, study_id])
-
+  useEffect(() => {
+    // Update based on environment variables
+    setParticipant(envParticipantId);
+    setStudy(envStudyId);
+  }, [envParticipantId, envStudyId]);
 
   // Checks if forms are filled in
   function validateForm() {
-    return participantId.length > 0 && studyId.length > 0
+    return participantId.length > 0 && studyId.length > 0;
   }
 
   // Function to log in participant
   function handleSubmit(e) {
     e.preventDefault();
-    
-    const logParticipant = async () => {
-
-      let loggedIn = false
-      // If firebase
-      if (validation === 'firebase'){
-        // Checks if participant exists in firestore
-        loggedIn = await validateParticipant(
-          participantId,
-          studyId,
-          startDate,
-          timestamp
-        );
-      }
-      // Else desktop
-      else if (validation === 'desktop'){
-          // Currently just placeholder
-          loggedIn = true
-      }
-
-      // Update credentials
+    // Validates fields
+    validationFunction(participantId, studyId, startDate, timestamp)
+    // Logs in depending on result from promise
+    .then((loggedIn) => {
       if (loggedIn) {
         jsPsych.data.addProperties({
           participant_id: participantId,
           study_id: studyId,
           timestamp: timestamp,
           start_date: startDate,
-        });   
+        });
+        onLogin(true);
       }
-      onLogin(loggedIn);
-    };
-    logParticipant();
+    });
   }
 
   return (
@@ -72,7 +53,7 @@ function Login({onLogin, participant_id, study_id, validation}) {
             <Form.Label>ParticipantId</Form.Label>
             <Form.Control
               autoFocus
-              readOnly = {participant_id!==''? true :false}
+              readOnly={envParticipantId !== "" ? true : false}
               type="participantId"
               value={participantId}
               onChange={(e) => setParticipant(e.target.value)}
@@ -81,7 +62,7 @@ function Login({onLogin, participant_id, study_id, validation}) {
           <Form.Group className="width-100" size="lg" controlId="studyId">
             <Form.Label>StudyId</Form.Label>
             <Form.Control
-              readOnly = {study_id!==''? true :false}
+              readOnly={envStudyId !== "" ? true : false}
               type="studyId"
               value={studyId}
               onChange={(e) => setStudy(e.target.value)}

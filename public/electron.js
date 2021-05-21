@@ -165,6 +165,7 @@ let stream = false
 let fileName = ''
 let filePath = ''
 let participantID = ''
+let studyID = ''
 let images = []
 let startTrial = -1
 
@@ -174,7 +175,7 @@ var git = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config/version.jso
 
 // Get Participant Id and Study Id from environment
 ipc.on('syncCredentials', (event) => {
-  event.returnValue = [process.env.REACT_APP_PARTICIPANT_ID, process.env.REACT_APP_STUDY_ID]
+  event.returnValue = {envParticipantId: process.env.REACT_APP_PARTICIPANT_ID, envStudyId: process.env.REACT_APP_STUDY_ID}
 })
 
 
@@ -182,9 +183,10 @@ ipc.on('syncCredentials', (event) => {
 ipc.on('data', (event, args) => {
 
   // initialize file - we got a patinet_id to save the data to
-  if (args.participant_id && fileName === '') {
+  if (args.participant_id && args.study_id && fileName === '') {
     const dir = app.getPath('userData')
     participantID = args.participant_id
+    studyID = args.study_id
     fileName = `pid_${participantID}_${Date.now()}.json`
     filePath = path.resolve(dir, fileName)
     startTrial = args.trial_index
@@ -216,7 +218,7 @@ ipc.on('save_video', (event, fileName, buffer) => {
   const name = app.getName()
   const today = new Date(Date.now())
   const date = today.toISOString().slice(0,10)
-  const fullPath = path.join(desktop, dataDir, `${participantID}`, date, name, fileName)
+  const fullPath = path.join(desktop, dataDir, `${studyID}`, `${participantID}`, date, name, fileName)
   fs.outputFile(fullPath, buffer, err => {
       if (err) {
           event.sender.send(ERROR, err.message)
@@ -298,7 +300,7 @@ app.on('will-quit', () => {
     const name = app.getName()
     const today = new Date(Date.now())
     const date = today.toISOString().slice(0,10)
-    const copyPath = path.join(desktop, dataDir, `${participantID}`, date, name)
+    const copyPath = path.join(desktop, dataDir, `${studyID}`, `${participantID}`, date, name)
     fs.mkdir(copyPath, { recursive: true }, (err) => {
       log.error(err)
       fs.copyFileSync(filePath, path.join(copyPath, fileName))

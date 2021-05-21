@@ -27,7 +27,7 @@ if (window.location.hostname === "localhost") {
 }
 
 // Add participant data and trial data to db
-const validateParticipant = (participantId, studyId, startDate, timestamp) => {
+const initParticipant = (participantId, studyId, startDate, timestamp) => {
   // return promise with value true if participant and study id match, false otherwise
     return db.collection(collectionName)
     .doc(studyId)
@@ -65,7 +65,7 @@ const addToFirebase = (data) => {
 export {
   db,
   collectionName,
-  validateParticipant,
+  initParticipant,
   addToFirebase
 };
 
