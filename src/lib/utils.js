@@ -72,7 +72,6 @@ const images = importAll(requireContext('../assets/images', false, /\.(png|jpe?g
 const getTurkUniqueId = () => {
   const turkInfo = jsPsych.turk.turkInfo()
   const uniqueId = `${turkInfo.workerId}:${turkInfo.assignmentId}`
-  jsPsych.data.addProperties({turk_unique_id: uniqueId})
   return uniqueId
 }
 

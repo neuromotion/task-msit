@@ -218,7 +218,7 @@ ipc.on('save_video', (event, fileName, buffer) => {
   const name = app.getName()
   const today = new Date(Date.now())
   const date = today.toISOString().slice(0,10)
-  const fullPath = path.join(desktop, dataDir, `${studyID}`, `${participantID}`, date, name, fileName)
+  const fullPath = path.join(desktop, dataDir, studyID, participantID, date, name, fileName)
   fs.outputFile(fullPath, buffer, err => {
       if (err) {
           event.sender.send(ERROR, err.message)
@@ -300,7 +300,7 @@ app.on('will-quit', () => {
     const name = app.getName()
     const today = new Date(Date.now())
     const date = today.toISOString().slice(0,10)
-    const copyPath = path.join(desktop, dataDir, `${studyID}`, `${participantID}`, date, name)
+    const copyPath = path.join(desktop, dataDir, studyID, participantID, date, name)
     fs.mkdir(copyPath, { recursive: true }, (err) => {
       log.error(err)
       fs.copyFileSync(filePath, path.join(copyPath, fileName))

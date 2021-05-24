@@ -16,10 +16,10 @@ function App() {
   const [psiturk, setPsiturk] = useState(false);
   const [envParticipantId, setEnvParticipantId] = useState("");
   const [envStudyId, setEnvStudyId] = useState("");
-  const [currentMethod, setMethod] = useState("");
+  const [currentMethod, setMethod] = useState("default");
 
   // Validation functions for desktop case and firebase
-  const desktopValidation = async () => {
+  const defaultValidation = async () => {
     return true;
   };
   const firebaseValidation = (participantId, studyId, startDate, timestamp) => {
@@ -27,6 +27,7 @@ function App() {
   };
 
   // Adding data functions for firebase, electron adn Mturk
+  const defaultFunction = (data) => {};
   const firebaseUpdateFunction = (data) => {
     addToFirebase(data);
   };
@@ -49,7 +50,6 @@ function App() {
     };
     completePsiturk();
   };
-  
 
   // Login logic
   useEffect(() => {
@@ -67,10 +67,10 @@ function App() {
       // If at home, fill in fields based on environment variables
       if (AT_HOME) {
         const credentials = renderer.sendSync("syncCredentials");
-        if (credentials.envParticipantId != null) {
+        if (credentials.envParticipantId !== null) {
           setEnvParticipantId(credentials.envParticipantId);
         }
-        if (credentials.envStudyId != null) {
+        if (credentials.envStudyId !== null) {
           setEnvStudyId(credentials.envStudyId);
         }
       }
@@ -84,7 +84,17 @@ function App() {
       if (MTURK) {
         /* eslint-disable */
         window.lodash = _.noConflict();
-        setPsiturk(new PsiTurk(getTurkUniqueId(), "/complete"));
+        const turkId = getTurkUniqueId();
+        const dateTimestamp = Date.now();
+        const curDate = new Date(dateTimestamp);
+        setPsiturk(new PsiTurk(turkId, "/complete"));
+        // study id yet to be determined
+        jsPsych.data.addProperties({
+          participant_id: turkId,
+          study_id: "mturk",
+          timestamp: dateTimestamp.toString(),
+          start_date: curDate.toString(),
+        });
         setMethod("mturk");
         setLogin(true);
         /* eslint-enable */
@@ -111,12 +121,15 @@ function App() {
               desktop: desktopUpdateFunction,
               firebase: firebaseUpdateFunction,
               mturk: psiturkUpdateFunction,
+              default: defaultFunction,
             }[currentMethod]
           }
           dataFinishFunction={
             {
               desktop: desktopFinishFunction,
               mturk: psiturkFinishFunction,
+              firebase: defaultFunction,
+              default: defaultFunction,
             }[currentMethod]
           }
         />
@@ -124,7 +137,8 @@ function App() {
         <Login
           validationFunction={
             {
-              desktop: desktopValidation,
+              desktop: defaultValidation,
+              default: defaultValidation,
               firebase: firebaseValidation,
             }[currentMethod]
           }
