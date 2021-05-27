@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Login from "./components/Login";
+import { jsPsych } from "jspsych-react";
 import { sleep } from "./lib/utils";
 import { initParticipant, addToFirebase } from "./firebase";
 import JsPsychExperiment from "./components/JsPsychExperiment";
@@ -10,6 +11,11 @@ import { MTURK, IS_ELECTRON, AT_HOME, FIREBASE, PROLIFIC } from "./config/main";
 import { getTurkUniqueId } from "./lib/utils";
 
 function App() {
+  // Variables for time
+  const dateTimestamp = Date.now();
+  const curDate = new Date(dateTimestamp);
+  const [startDate] = useState(curDate.toString());
+  const [timestamp] = useState(dateTimestamp.toString());
   // Variables for login
   const [loggedIn, setLogin] = useState(false);
   const [ipcRenderer, setRenderer] = useState(false);
@@ -51,6 +57,20 @@ function App() {
     completePsiturk();
   };
 
+  // Function to add jspsych data on login
+  const setLoggedIn = useCallback(
+    (loggedIn, studyId, participantId) =>{
+      jsPsych.data.addProperties({
+        participant_id: participantId,
+        study_id: studyId,
+        timestamp: timestamp,
+        start_date: startDate,
+      });
+      setLogin(loggedIn)
+    },
+    [startDate, timestamp],
+  )
+
   // Login logic
   useEffect(() => {
     // For testing and debugging purposes
@@ -65,17 +85,12 @@ function App() {
       const renderer = electron.ipcRenderer;
       setRenderer(renderer);
       // If at home, fill in fields based on environment variables
-      if (AT_HOME) {
-        const credentials = renderer.sendSync("syncCredentials");
-        if (credentials.envParticipantId !== null) {
-          setEnvParticipantId(credentials.envParticipantId);
-        }
-        if (credentials.envStudyId !== null) {
-          setEnvStudyId(credentials.envStudyId);
-        }
+      const credentials = renderer.sendSync("syncCredentials");
+      if (credentials.envParticipantId !== null) {
+        setEnvParticipantId(credentials.envParticipantId);
       }
-      // If in clinic - currently placeholder
-      else {
+      if (credentials.envStudyId !== null) {
+        setEnvStudyId(credentials.envStudyId);
       }
       setMethod("desktop");
       // If online
@@ -88,15 +103,8 @@ function App() {
         const dateTimestamp = Date.now();
         const curDate = new Date(dateTimestamp);
         setPsiturk(new PsiTurk(turkId, "/complete"));
-        // study id yet to be determined
-        jsPsych.data.addProperties({
-          participant_id: turkId,
-          study_id: "mturk",
-          timestamp: dateTimestamp.toString(),
-          start_date: curDate.toString(),
-        });
         setMethod("mturk");
-        setLogin(true);
+        setLoggedIn(true, "mturk", turkId, startDate, timestamp)
         /* eslint-enable */
       }
       // If firebase
@@ -110,7 +118,7 @@ function App() {
         setMethod("firebase");
       }
     }
-  }, []);
+  }, [setLoggedIn, startDate, timestamp]);
 
   return (
     <>
@@ -144,7 +152,9 @@ function App() {
           }
           envParticipantId={envParticipantId}
           envStudyId={envStudyId}
-          onLogin={setLogin}
+          timestamp={timestamp}
+          startDate={startDate}
+          onLogin={setLoggedIn}
         />
       )}
     </>

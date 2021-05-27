@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { jsPsych } from "jspsych-react";
-import "../App.css";
-import "bootstrap/dist/css/bootstrap.css";
-import "@fortawesome/fontawesome-free/css/all.css";
 
-function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
+function Login({ onLogin, envParticipantId, envStudyId, validationFunction, startDate, timestamp }) {
   // State variables for login screen
-  const dateTimestamp = Date.now();
-  const curDate = new Date(dateTimestamp);
-  const [startDate] = useState(curDate.toString());
-  const [timestamp] = useState(dateTimestamp.toString());
   const [participantId, setParticipant] = useState("");
   const [studyId, setStudy] = useState("");
 
@@ -33,15 +25,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
     validationFunction(participantId, studyId, startDate, timestamp)
     // Logs in depending on result from promise
     .then((loggedIn) => {
-      if (loggedIn) {
-        jsPsych.data.addProperties({
-          participant_id: participantId,
-          study_id: studyId,
-          timestamp: timestamp,
-          start_date: startDate,
-        });
-        onLogin(true);
-      }
+      onLogin(loggedIn, studyId, participantId)
     });
   }
 
