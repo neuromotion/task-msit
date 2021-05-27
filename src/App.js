@@ -24,6 +24,8 @@ function App() {
   const [envStudyId, setEnvStudyId] = useState("");
   const [currentMethod, setMethod] = useState("default");
 
+  
+
   // Validation functions for desktop case and firebase
   const defaultValidation = async () => {
     return true;
@@ -100,8 +102,6 @@ function App() {
         /* eslint-disable */
         window.lodash = _.noConflict();
         const turkId = getTurkUniqueId();
-        const dateTimestamp = Date.now();
-        const curDate = new Date(dateTimestamp);
         setPsiturk(new PsiTurk(turkId, "/complete"));
         setMethod("mturk");
         setLoggedIn(true, "mturk", turkId)
