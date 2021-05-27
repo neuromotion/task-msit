@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-function Login({ onLogin, envParticipantId, envStudyId, validationFunction, startDate, timestamp }) {
+function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
   // State variables for login screen
   const [participantId, setParticipant] = useState("");
   const [studyId, setStudy] = useState("");
@@ -22,7 +22,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction, star
   function handleSubmit(e) {
     e.preventDefault();
     // Validates fields
-    validationFunction(participantId, studyId, startDate, timestamp)
+    validationFunction(participantId, studyId)
     // Logs in depending on result from promise
     .then((loggedIn) => {
       onLogin(loggedIn, studyId, participantId)

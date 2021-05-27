@@ -28,7 +28,7 @@ function App() {
   const defaultValidation = async () => {
     return true;
   };
-  const firebaseValidation = (participantId, studyId, startDate, timestamp) => {
+  const firebaseValidation = (participantId, studyId) => {
     return initParticipant(participantId, studyId, startDate, timestamp);
   };
 
@@ -104,7 +104,7 @@ function App() {
         const curDate = new Date(dateTimestamp);
         setPsiturk(new PsiTurk(turkId, "/complete"));
         setMethod("mturk");
-        setLoggedIn(true, "mturk", turkId, startDate, timestamp)
+        setLoggedIn(true, "mturk", turkId)
         /* eslint-enable */
       }
       // If firebase
@@ -152,8 +152,6 @@ function App() {
           }
           envParticipantId={envParticipantId}
           envStudyId={envStudyId}
-          timestamp={timestamp}
-          startDate={startDate}
           onLogin={setLoggedIn}
         />
       )}
