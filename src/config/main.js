@@ -29,9 +29,20 @@ const audioCodes = {
 const MTURK = (!jsPsych.turk.turkInfo().outsideTurk)
 const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
 const VIDEO =  (process.env.REACT_APP_VIDEO === 'true')
+var IS_ELECTRON = (process.env.REACT_APP_IS_ELECTRON === 'true')
+const PROLIFIC = (process.env.REACT_APP_PROLIFIC === 'true')
 
 // is this firebase?
 const FIREBASE = (process.env.REACT_APP_FIREBASE === 'true')
+
+// Could work on this logic
+try {
+	window.require("electron");
+  } catch {
+	window.alert("Not electron")
+	IS_ELECTRON = false
+  }
+
 
 // get language file
 const lang = require('../language/en_us.json')
@@ -48,6 +59,8 @@ export {
 	eventCodes,
 	MTURK,
 	AT_HOME,
+	IS_ELECTRON,
+	PROLIFIC,
 	VIDEO,
 	FIREBASE,
 	audioCodes,

@@ -26,35 +26,47 @@ if (window.location.hostname === "localhost") {
   db.useEmulator("localhost", 8080);
 }
 
-// Add data to db
-const createFirebaseDocument = (patientId) => {
-  db.collection(collectionName)
-    .doc(patientId)
-    .set({ patientId, dateCreated: new Date() });
+// Add participant data and trial data to db
+const initParticipant = (participantId, studyId, startDate, timestamp) => {
+  // return promise with value true if participant and study id match, false otherwise
+    return db.collection(collectionName)
+    .doc(studyId)
+    .collection('participants')
+    .doc(participantId)
+    .collection('data')
+    .doc(timestamp)
+    .set({start_time: startDate, app_version: window.navigator.appVersion, app_platform: window.navigator.platform, results: []})
+    .then(()=>{
+      return true
+    })
+    .catch((error) => {
+      window.alert("You are not authorized to access the experiment")
+      return false
+    });
 };
 
-// create a document in the collection with a random id
-const createFirebaseDocumentRandom = () => {
-  db.collection(collectionName).add({ dateCreated: new Date() });
-};
-
+// Add inidividual trials to db
 const addToFirebase = (data) => {
   console.log(data)
-  const patientId = data.patient_id;
+  const participantId = data.participant_id;
+  const studyId = data.study_id;
+  const timestamp = data.timestamp
+  
   db.collection(collectionName)
-    .doc(patientId)
-    .collection("data")
-    .doc(`trial_${data.trial_index}`)
-    .set(data);
+    .doc(studyId)
+    .collection('participants')
+    .doc(participantId)
+    .collection('data')
+    .doc(timestamp)
+    .update('results', firebase.firestore.FieldValue.arrayUnion(data))
 };
 
 // Export types that exists in Firestore
 export {
   db,
   collectionName,
-  createFirebaseDocument,
-  addToFirebase,
-  createFirebaseDocumentRandom,
+  initParticipant,
+  addToFirebase
 };
 
 export default firebase;

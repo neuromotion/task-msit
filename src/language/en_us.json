@@ -57,9 +57,6 @@
     "p15": "3. Try to relax your shoulders, neck, and face as much as possible. Do not clench your jaw.",
     "practice_trials": "We will practice with some example trials. <br> Remember, respond only to the identity of the number that is different, not the position of the number."
   },
-  "userid": {
-    "set": "Please enter patient ID."
-  },
   "eventMarker" : {
     "found": "Hold the USB event marker in front of the camera.",
     "not_found": "Note: no USB event marker found."

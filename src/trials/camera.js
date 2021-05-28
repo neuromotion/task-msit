@@ -1,14 +1,19 @@
-import { lang, taskName, AT_HOME } from '../config/main'
+import { lang, taskName, AT_HOME , IS_ELECTRON} from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 import { jsPsych } from 'jspsych-react'
 
-const electron = window.require('electron');
-const ipcRenderer  = electron.ipcRenderer;
 
-function saveBlob(blob, media, patientId) {
+const isElectron = IS_ELECTRON//!MTURK
+let ipcRenderer = false;
+if (isElectron) {
+  const electron = window.require('electron');
+  ipcRenderer  = electron.ipcRenderer;
+}
+
+function saveBlob(blob, media, participantId) {
   let reader = new FileReader()
-  let fileName =`pid_${patientId}_${media}_${Date.now()}.webm`
+  let fileName =`pid_${participantId}_${media}_${Date.now()}.webm`
   reader.onload = function() {
       if (reader.readyState === 2) {
           var buffer = new Buffer(reader.result)
@@ -38,7 +43,7 @@ const camera = () => {
     on_load: () => {
       // Grab elements, create settings, etc.
       // Elements for taking the snapshot
-      const patientId = jsPsych.data.get().values()[0].patient_id
+      const participantId = jsPsych.data.get().values()[0].participant_id
 
       let camera = document.getElementById('camera');
 
@@ -62,7 +67,7 @@ const camera = () => {
     
         window[recorder].addEventListener('stop', function() {
           const blob = new Blob(recordedChunks)
-          saveBlob(blob, recorder, patientId)
+          saveBlob(blob, recorder, participantId)
         });
     
       };
