@@ -16,6 +16,7 @@
     "@fortawesome/fontawesome-free": "^5.9.0",
     "bootstrap": "^4.3.1",
     "cross-env": "^6.0.3",
+    "dotenv-cli": "^4.0.0",
     "electron-devtools-installer": "^2.2.4",
     "electron-log": "^3.0.9",
     "electron-squirrel-startup": "^1.0.0",

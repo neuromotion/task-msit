@@ -154,7 +154,7 @@ ipc.on('trigger', (event, args) => {
   let code = args
   if (code != undefined) {
     log.info(`Event: ${_.invert(eventCodes)[code]}, code: ${code}`)
-     if (!AT_HOME) {
+     if (USE_EVENT_MARKER) {
        handleEventSend(code)
      }
   }
