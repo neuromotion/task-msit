@@ -52,13 +52,19 @@
     "electron": "electron .",
     "electron-dev": "cross-env ELECTRON_START_URL=\"http://localhost:3000\" electron .",
     "dev": "concurrently --kill-others \"npm:start\" \"sleep 10 && npm run electron-dev\"",
-    "dev:home": "cross-env REACT_APP_AT_HOME=\"true\" npm run dev",
-    "dev:clinic": "cross-env REACT_APP_AT_HOME=\"false\" npm run dev",
-    "build:clinic": "cross-env REACT_APP_AT_HOME=\"false\" npm run build",
-    "build:home": "cross-env REACT_APP_AT_HOME=\"true\" npm run build",
     "build:home:video": "cross-env REACT_APP_AT_HOME=\"true\" REACT_APP_VIDEO=\"true\" npm run build",
     "firebase:dev": "firebase emulators:start --import emulator_data",
-    "firebase:savedev": "firebase emulators:export emulator_data"
+    "firebase:savedev": "firebase emulators:export emulator_data",
+    "dev:home": "dotenv -e env/home.env npm run dev",
+    "dev:vid": "dotenv -e env/video.env npm run dev",
+    "dev:clinic": "dotenv -e env/clinic.env npm run dev",
+    "dev:firebase": "dotenv -e env/firebase-build.env npm run dev",
+    "dev:turk-prolific": "dotenv -e env/turkProlific.env npm run dev",
+    "build:turk-prolific": "dotenv -e env/turkProlific.env npm run build",
+    "build:video": "dotenv -e env/video.env npm run build",
+    "build:home": "dotenv -e env/home.env npm run build",
+    "build:clinic": "dotenv -e env/clinic.env npm run build",
+    "build:firebase": "dotenv -e env/firebase-build.env npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -5,6 +5,7 @@
 import { jsPsych } from "jspsych-react";
 import _ from "lodash";
 import { eventCodes } from "./trigger";
+import { verifyProlific } from "../lib/utils";
 
 require("dotenv").config();
 
@@ -30,6 +31,7 @@ let IS_ELECTRON = true;
 let FIREBASE = process.env.REACT_APP_FIREBASE === "true";
 
 // Could work on this logic
+
 try {
   window.require("electron");
 } catch {

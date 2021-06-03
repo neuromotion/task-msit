@@ -40,7 +40,6 @@ const initParticipant = (participantId, studyId, startDate, timestamp) => {
       return true
     })
     .catch((error) => {
-      window.alert("You are not authorized to access the experiment")
       return false
     });
 };

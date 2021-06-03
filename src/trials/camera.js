@@ -1,10 +1,10 @@
-import { lang, taskName, AT_HOME , IS_ELECTRON} from '../config/main'
+import { lang, taskName, VIDEO , IS_ELECTRON} from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 import { jsPsych } from 'jspsych-react'
 
 
-const isElectron = IS_ELECTRON//!MTURK
+const isElectron = IS_ELECTRON
 let ipcRenderer = false;
 if (isElectron) {
   const electron = window.require('electron');
@@ -97,7 +97,7 @@ const camera = () => {
     
     },
     on_finish: () => {
-      if (AT_HOME) {
+      if (VIDEO) {
         window.cameraCapture.start()
         window.screenCapture.start()
       }

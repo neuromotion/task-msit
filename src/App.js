@@ -4,11 +4,19 @@ import "bootstrap/dist/css/bootstrap.css";
 import "@fortawesome/fontawesome-free/css/all.css";
 import Login from "./components/Login";
 import { jsPsych } from "jspsych-react";
-import { sleep } from "./lib/utils";
+import { getTurkUniqueId, getProlificId, sleep } from "./lib/utils";
 import { initParticipant, addToFirebase } from "./firebase";
 import JsPsychExperiment from "./components/JsPsychExperiment";
-import { MTURK, IS_ELECTRON, AT_HOME, FIREBASE, PROLIFIC } from "./config/main";
-import { getTurkUniqueId } from "./lib/utils";
+import {
+  MTURK,
+  IS_ELECTRON,
+  FIREBASE,
+  PROLIFIC,
+  VIDEO,
+  VOLUME,
+  USE_EVENT_MARKER,
+  USE_PHOTODIODE
+} from "./config/main";
 
 function App() {
   // Variables for time
@@ -23,7 +31,7 @@ function App() {
   const [envParticipantId, setEnvParticipantId] = useState("");
   const [envStudyId, setEnvStudyId] = useState("");
   const [currentMethod, setMethod] = useState("default");
-
+  const [reject, setReject] = useState(false);
   
 
   // Validation functions for desktop case and firebase
@@ -76,11 +84,15 @@ function App() {
   // Login logic
   useEffect(() => {
     // For testing and debugging purposes
-    console.log("MTURK? :" + MTURK);
-    console.log("ELECTRON? :" + IS_ELECTRON);
-    console.log("AT_HOME? :" + AT_HOME);
-    console.log("FIREBASE? :" + FIREBASE);
-
+    console.log("Outside Turk:", jsPsych.turk.turkInfo().outsideTurk);
+    console.log("Turk:", MTURK);
+    console.log("Firebase:", FIREBASE);
+    console.log("Prolific:", PROLIFIC);
+    console.log("Electron:", IS_ELECTRON);
+    console.log("Video:", VIDEO);
+    console.log("Volume:", VOLUME);
+    console.log("Event Marker:", USE_EVENT_MARKER);
+    console.log("Photodiode:", USE_PHOTODIODE);
     // If on desktop
     if (IS_ELECTRON) {
       const electron = window.require("electron");
@@ -107,56 +119,73 @@ function App() {
         setLoggedIn(true, "mturk", turkId)
         /* eslint-enable */
       }
+      // If prolific
+      else if (PROLIFIC) {
+        const pID = getProlificId();
+        if (FIREBASE && pID) {
+          setMethod("firebase");
+          setLoggedIn(true, "prolific", pID);
+        } else {
+          setReject(true);
+        }
+      }
       // If firebase
       else if (FIREBASE) {
-        // If prolific - currectly placeholder
-        if (PROLIFIC) {
-        }
-        // Otherwise - currently placeholder
-        else {
-        }
         setMethod("firebase");
+      } else {
+        setReject(true);
       }
     }
   }, [setLoggedIn, startDate, timestamp]);
 
-  return (
-    <>
-      {loggedIn ? (
-        <JsPsychExperiment
-          dataUpdateFunction={
-            {
-              desktop: desktopUpdateFunction,
-              firebase: firebaseUpdateFunction,
-              mturk: psiturkUpdateFunction,
-              default: defaultFunction,
-            }[currentMethod]
-          }
-          dataFinishFunction={
-            {
-              desktop: desktopFinishFunction,
-              mturk: psiturkFinishFunction,
-              firebase: defaultFunction,
-              default: defaultFunction,
-            }[currentMethod]
-          }
-        />
-      ) : (
-        <Login
-          validationFunction={
-            {
-              desktop: defaultValidation,
-              default: defaultValidation,
-              firebase: firebaseValidation,
-            }[currentMethod]
-          }
-          envParticipantId={envParticipantId}
-          envStudyId={envStudyId}
-          onLogin={setLoggedIn}
-        />
-      )}
-    </>
-  );
+  if (reject) {
+    return (
+      <div className="centered-h-v">
+        <div className="width-50 alert alert-danger">
+          Please ask your task provider to enable the Firebase or MTurk database before logging in online.
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <>
+        {loggedIn ? (
+          <JsPsychExperiment
+            dataUpdateFunction={
+              {
+                desktop: desktopUpdateFunction,
+                firebase: firebaseUpdateFunction,
+                mturk: psiturkUpdateFunction,
+                default: defaultFunction,
+              }[currentMethod]
+            }
+            dataFinishFunction={
+              {
+                desktop: desktopFinishFunction,
+                mturk: psiturkFinishFunction,
+                firebase: defaultFunction,
+                default: defaultFunction,
+              }[currentMethod]
+            }
+          />
+        ) : (
+          <Login
+            validationFunction={
+              {
+                desktop: defaultValidation,
+                default: defaultValidation,
+                firebase: firebaseValidation,
+              }[currentMethod]
+            }
+            envParticipantId={envParticipantId}
+            envStudyId={envStudyId}
+            onLogin={setLoggedIn}
+          />
+        )}
+      </>
+    );
+  }
+  
 }
 
 export default App;

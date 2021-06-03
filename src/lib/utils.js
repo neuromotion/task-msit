@@ -31,6 +31,11 @@ const verifyProlific = () => {
 };
 
 // TODO: add getProlificId()
+const getProlificId = () => {
+  const prolificId = getQueryVariable("PROLIFIC_PID");
+  const uniqueId = `${prolificId}`;
+  jsPsych.data.addProperties({ patient_id: uniqueId, timestamp: Date.now() });
+};
 
 // add a random number between 0 and offset to the base number
 const jitter = (base, offset) => (
@@ -114,6 +119,7 @@ export {
   generateWaitSet,
   images,
   verifyProlific,
+  getProlificId,
   startKeypressListener,
   getTurkUniqueId,
   sleep,

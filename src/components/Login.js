@@ -6,6 +6,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
   // State variables for login screen
   const [participantId, setParticipant] = useState("");
   const [studyId, setStudy] = useState("");
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     // Update based on environment variables
@@ -25,16 +26,25 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
     validationFunction(participantId, studyId)
     // Logs in depending on result from promise
     .then((loggedIn) => {
-      onLogin(loggedIn, studyId, participantId)
+      if (loggedIn) {
+        onLogin(loggedIn, studyId, participantId);
+      } else {
+        setError(true);
+      }
     });
   }
 
   return (
     <div className="centered-h-v">
       <div className="width-50">
+        {error ? (
+          <div className="alert alert-danger" role="alert">
+            The participant ID and study ID do not match
+          </div>
+        ) : null}
         <Form className="centered-h-v" onSubmit={handleSubmit}>
           <Form.Group className="width-100" size="lg" controlId="participantId">
-            <Form.Label>ParticipantId</Form.Label>
+            <Form.Label>Participant Id</Form.Label>
             <Form.Control
               autoFocus
               readOnly={envParticipantId !== "" ? true : false}
@@ -44,7 +54,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
             />
           </Form.Group>
           <Form.Group className="width-100" size="lg" controlId="studyId">
-            <Form.Label>StudyId</Form.Label>
+            <Form.Label>Study Id</Form.Label>
             <Form.Control
               readOnly={envStudyId !== "" ? true : false}
               type="studyId"
