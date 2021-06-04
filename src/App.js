@@ -20,10 +20,7 @@ import {
 
 function App() {
   // Variables for time
-  const dateTimestamp = Date.now();
-  const curDate = new Date(dateTimestamp);
-  const [startDate] = useState(curDate.toString());
-  const [timestamp] = useState(dateTimestamp.toString());
+  const [startDate] = useState(new Date().toISOString());
   // Variables for login
   const [loggedIn, setLogin] = useState(false);
   const [ipcRenderer, setRenderer] = useState(false);
@@ -39,7 +36,7 @@ function App() {
     return true;
   };
   const firebaseValidation = (participantId, studyId) => {
-    return initParticipant(participantId, studyId, startDate, timestamp);
+    return initParticipant(participantId, studyId, startDate);
   };
 
   // Adding data functions for firebase, electron adn Mturk
@@ -73,12 +70,11 @@ function App() {
       jsPsych.data.addProperties({
         participant_id: participantId,
         study_id: studyId,
-        timestamp: timestamp,
         start_date: startDate,
       });
       setLogin(loggedIn)
     },
-    [startDate, timestamp],
+    [startDate],
   )
 
   // Login logic
@@ -100,10 +96,10 @@ function App() {
       setRenderer(renderer);
       // If at home, fill in fields based on environment variables
       const credentials = renderer.sendSync("syncCredentials");
-      if (credentials.envParticipantId !== null) {
+      if (credentials.envParticipantId !== null && credentials.envParticipantId !== undefined) {
         setEnvParticipantId(credentials.envParticipantId);
       }
-      if (credentials.envStudyId !== null) {
+      if (credentials.envStudyId !== null && credentials.envStudyId !== undefined) {
         setEnvStudyId(credentials.envStudyId);
       }
       setMethod("desktop");
@@ -136,7 +132,7 @@ function App() {
         setReject(true);
       }
     }
-  }, [setLoggedIn, startDate, timestamp]);
+  }, [setLoggedIn, startDate]);
 
   if (reject) {
     return (

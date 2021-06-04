@@ -59,13 +59,11 @@
     "dev:vid": "dotenv -e env/video.env npm run dev",
     "dev:clinic": "dotenv -e env/clinic.env npm run dev",
     "dev:firebase": "dotenv -e env/firebase-build.env npm run dev",
-    "dev:debug": "dotenv -e env/debug.env npm run dev",
     "dev:turk-prolific": "dotenv -e env/turkProlific.env npm run dev",
     "build:turk-prolific": "dotenv -e env/turkProlific.env npm run build",
     "build:video": "dotenv -e env/video.env npm run build",
     "build:home": "dotenv -e env/home.env npm run build",
     "build:clinic": "dotenv -e env/clinic.env npm run build",
-    "build:debug_turk": "dotenv -e env/debug.env -e env/turkProlific.env npm run build",
     "build:firebase": "dotenv -e env/firebase-build.env npm run build"
   },
   "eslintConfig": {
