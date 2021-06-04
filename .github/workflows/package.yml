@@ -17,9 +17,6 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
-    env:
-      REACT_APP_AT_HOME: ${{ github.event.inputs.setting == 'home' }}
-
     strategy:
       fail-fast: false
       matrix:
