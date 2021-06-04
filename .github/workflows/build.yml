@@ -52,7 +52,7 @@ jobs:
         uses: xom9ikk/dotenv@v1.0.2
         with:
           path: ./env
-          mode: ${{matrix.setting}}${{matrix.video=='off' && '' || '-video'}}
+          mode: ${{matrix.setting}}${{ matrix.video == 'off' && 'novid' || '-video'}}
       - name: npm build
         run: npm run build
       - name: npm test
