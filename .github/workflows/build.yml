@@ -47,13 +47,12 @@ jobs:
         run: |
           npm config set "//npm.pkg.github.com/:_authToken" ${{ secrets.GITHUB_TOKEN }}
           npm install
-          
-      - name: load .env for video
-        if: matrix.video=='on'
-        run: dotenv -e env/${{matrix.setting}}.env echo "env loaded"
-      - name: load .env for no video
-        if: matrix.video=='off'
-        run: dotenv -e env/${{matrix.setting}}-video.env echo "env loaded"
+    
+      - name: Load .env file
+        uses: xom9ikk/dotenv@v1.0.2
+        with:
+          path: /env
+          mode: ${{matrix.setting}}
       - name: npm build
         run: npm run build
       - name: npm test

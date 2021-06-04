@@ -40,7 +40,7 @@ try {
 
 // these variables depend on IS_ELECTRON
 // whether or not to ask the participant to adjust the volume
-const VOLUME = process.env.REACT_APP_VOLUME === "true" && IS_ELECTRON;
+const VOLUME = process.env.REACT_APP_VOLUME === "true";
 // whether or not to enable video
 const VIDEO = process.env.REACT_APP_VIDEO === "true" && IS_ELECTRON;
 // whether or not the EEG/event marker is available

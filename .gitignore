@@ -15,7 +15,7 @@
 
 # misc
 .DS_Store
-.env*
+.env
 .firebase
 
 npm-debug.log*
