@@ -49,10 +49,10 @@ jobs:
           npm install
       - name: load .env for video
         if: matrix.video=='on'
-        run: dotenv -e ${{matrix.setting}}.env
+        run: dotenv -e env/${{matrix.setting}}.env
       - name: load .env for no video
         if: matrix.video=='off'
-        run: dotenv -e ${{matrix.setting}}-video.env
+        run: dotenv -e env/${{matrix.setting}}-video.env
       - name: npm build
         run: npm run build
       - name: npm test
