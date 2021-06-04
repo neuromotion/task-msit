@@ -27,9 +27,6 @@ jobs:
           - os: macOS-latest
             setting: clinic
             video: on 
-          - os: windows-latest
-            setting: clinic
-            video: on
           - os: ubuntu-latest
             setting: home
             video: on
@@ -38,31 +35,27 @@ jobs:
             video: on
 
     steps:
-    # Set up js package
-    - uses: actions/checkout@v1
-    - name: Use Node.js
-      uses: actions/setup-node@v1
-      with:
-        node-version: 12.x
+      # Set up js package
+      - uses: actions/checkout@v1
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
 
-    # install, test, build package
-    - name: npm install
-      run: |
-        npm config set "//npm.pkg.github.com/:_authToken" ${{ secrets.GITHUB_TOKEN }}
-        npm install
-      # build for home video
-    - name: npm build home video
-      if: matrix.video == 'on'
-      run: npm run build:video
-      # build for home
-    - name: npm build home no video
-      if: matrix.setting == 'home' && matrix.video == 'off'
-      run: npm run build:home
-      # build for clinic
-    - name: npm build home no video
-      if: matrix.setting == 'clinic'
-      run: npm run build:clinic
-    - name: npm test
-      run: npm test
-      env:
-        CI: true
+      # install, test, build package
+      - name: npm install
+        run: |
+          npm config set "//npm.pkg.github.com/:_authToken" ${{ secrets.GITHUB_TOKEN }}
+          npm install
+        # build for video
+      - name: npm build video
+        if: matrix.video == 'on'
+        run: npm run build:${{matrix.setting}}:video
+        # build for no video
+      - name: npm build home no video
+        if:  matrix.video == 'off'
+        run: npm run build:${{matrix.setting}}
+      - name: npm test
+        run: npm test
+        env:
+          CI: true

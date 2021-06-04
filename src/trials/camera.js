@@ -4,9 +4,8 @@ import { baseStimulus } from '../lib/markup/stimuli'
 import { jsPsych } from 'jspsych-react'
 
 
-const isElectron = IS_ELECTRON
 let ipcRenderer = false;
-if (isElectron) {
+if (IS_ELECTRON) {
   const electron = window.require('electron');
   ipcRenderer  = electron.ipcRenderer;
 }

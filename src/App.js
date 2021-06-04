@@ -20,7 +20,7 @@ import {
 
 function App() {
   // Variables for time
-  const [startDate] = useState(new Date().toISOString());
+  const  startDate = new Date().toISOString();
   // Variables for login
   const [loggedIn, setLogin] = useState(false);
   const [ipcRenderer, setRenderer] = useState(false);
@@ -96,10 +96,10 @@ function App() {
       setRenderer(renderer);
       // If at home, fill in fields based on environment variables
       const credentials = renderer.sendSync("syncCredentials");
-      if (credentials.envParticipantId !== null && credentials.envParticipantId !== undefined) {
+      if (credentials.envParticipantId) {
         setEnvParticipantId(credentials.envParticipantId);
       }
-      if (credentials.envStudyId !== null && credentials.envStudyId !== undefined) {
+      if (credentials.envStudyId) {
         setEnvStudyId(credentials.envStudyId);
       }
       setMethod("desktop");
@@ -138,7 +138,7 @@ function App() {
     return (
       <div className="centered-h-v">
         <div className="width-50 alert alert-danger">
-          Please ask your task provider to enable the Firebase or MTurk database before logging in online.
+          Please ask your task provider to enable the firestore database before logging in online.
         </div>
       </div>
     );

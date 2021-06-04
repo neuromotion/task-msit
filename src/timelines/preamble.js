@@ -8,16 +8,16 @@ import camera from "../trials/camera";
 
 
 let tl = [experimentStart()];
+if (VOLUME) {
+  tl.push(adjustVolume());
+} 
+if (USE_EVENT_MARKER) {
+  tl.push(holdUpMarker());
+  tl.push(startCode());
+}
+tl.push(instructions());
 if (VIDEO) {
-  tl.push(instructions());
   tl.push(camera());
-} else {
-  if (VOLUME) tl.push(adjustVolume());
-  if (USE_EVENT_MARKER) {
-    tl.push(holdUpMarker());
-    tl.push(startCode());
-  }
-  tl.push(instructions());
 }
 
 const preamble = {

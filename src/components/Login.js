@@ -44,7 +44,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
         ) : null}
         <Form className="centered-h-v" onSubmit={handleSubmit}>
           <Form.Group className="width-100" size="lg" controlId="participantId">
-            <Form.Label>Participant Id</Form.Label>
+            <Form.Label>Participant ID</Form.Label>
             <Form.Control
               autoFocus
               readOnly={envParticipantId !== "" ? true : false}
@@ -54,7 +54,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
             />
           </Form.Group>
           <Form.Group className="width-100" size="lg" controlId="studyId">
-            <Form.Label>Study Id</Form.Label>
+            <Form.Label>Study ID</Form.Label>
             <Form.Control
               readOnly={envStudyId !== "" ? true : false}
               type="studyId"
@@ -69,7 +69,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
             type="submit"
             disabled={!validateForm()}
           >
-            Login
+            Log In
           </Button>
         </Form>
       </div>

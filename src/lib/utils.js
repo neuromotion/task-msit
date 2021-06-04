@@ -30,11 +30,9 @@ const verifyProlific = () => {
   return getQueryVariable("PROLIFIC_ID") !== undefined;
 };
 
-// TODO: add getProlificId()
 const getProlificId = () => {
   const prolificId = getQueryVariable("PROLIFIC_PID");
-  const uniqueId = `${prolificId}`;
-  jsPsych.data.addProperties({ patient_id: uniqueId, timestamp: Date.now() });
+  return prolificId
 };
 
 // add a random number between 0 and offset to the base number
