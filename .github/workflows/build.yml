@@ -53,13 +53,13 @@ jobs:
         if: matrix.video == 'on'
         uses: xom9ikk/dotenv@v1.0.2
         with:
-          path: ../../env/${{matrix.setting}}-video
+          path: ../../env/${{matrix.setting}}-video.env
       # load .env for video
       - name: Load .env file no video
         if: matrix.video == 'off'
         uses: xom9ikk/dotenv@v1.0.2
         with:
-          path: ../../env/${{matrix.setting}}
+          path: ../../env/${{matrix.setting}}.env
       
       # build
       - name: npm build
