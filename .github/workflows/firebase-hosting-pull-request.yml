@@ -12,7 +12,7 @@ jobs:
       - name: npm install
         run: npm install 
       - name: npm build for firebase
-        run: npm run build:firebase'
+        run: npm run build:firebase
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
