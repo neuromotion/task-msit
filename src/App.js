@@ -67,20 +67,20 @@ function App() {
   // Function to add jspsych data on login
   const setLoggedIn = useCallback(
     (loggedIn, studyId, participantId) =>{
-      jsPsych.data.addProperties({
-        participant_id: participantId,
-        study_id: studyId,
-        start_date: startDate,
-      });
+      if(loggedIn){
+        jsPsych.data.addProperties({
+          participant_id: participantId,
+          study_id: studyId,
+          start_date: startDate,
+        });
+      }
       setLogin(loggedIn)
-    },
-    [startDate],
+    },[startDate],
   )
 
   // Login logic
   useEffect(() => {
     // For testing and debugging purposes
-    console.log("Outside Turk:", jsPsych.turk.turkInfo().outsideTurk);
     console.log("Turk:", MTURK);
     console.log("Firebase:", FIREBASE);
     console.log("Prolific:", PROLIFIC);
@@ -132,13 +132,13 @@ function App() {
         setReject(true);
       }
     }
-  }, [setLoggedIn, startDate]);
+  }, [setLoggedIn]);
 
   if (reject) {
     return (
       <div className="centered-h-v">
         <div className="width-50 alert alert-danger">
-          Please ask your task provider to enable the firestore database before logging in online.
+          Please ask your task provider to enable firebase.
         </div>
       </div>
     );
