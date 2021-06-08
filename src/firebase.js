@@ -27,20 +27,19 @@ if (window.location.hostname === "localhost") {
 }
 
 // Add participant data and trial data to db
-const initParticipant = (participantId, studyId, startDate, timestamp) => {
+const initParticipant = (participantId, studyId, startDate) => {
   // return promise with value true if participant and study id match, false otherwise
     return db.collection(collectionName)
     .doc(studyId)
     .collection('participants')
     .doc(participantId)
     .collection('data')
-    .doc(timestamp)
-    .set({start_time: startDate, app_version: window.navigator.appVersion, app_platform: window.navigator.platform, results: []})
+    .doc(startDate)
+    .set({ start_time: startDate, app_version: window.navigator.appVersion, app_platform: window.navigator.platform, results: []})
     .then(()=>{
       return true
     })
     .catch((error) => {
-      window.alert("You are not authorized to access the experiment")
       return false
     });
 };
@@ -50,14 +49,14 @@ const addToFirebase = (data) => {
   console.log(data)
   const participantId = data.participant_id;
   const studyId = data.study_id;
-  const timestamp = data.timestamp
+  const startDate = data.start_date
   
   db.collection(collectionName)
     .doc(studyId)
     .collection('participants')
     .doc(participantId)
     .collection('data')
-    .doc(timestamp)
+    .doc(startDate)
     .update('results', firebase.firestore.FieldValue.arrayUnion(data))
 };
 

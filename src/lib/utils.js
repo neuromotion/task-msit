@@ -15,6 +15,25 @@ const addCursor = (elementId) => {
   element.classList.remove("nocursor");
 }
 
+const getQueryVariable = (variable) => {
+  let query = window.location.search.substring(1);
+  let vars = query.split("&");
+  for (let i = 0; i < vars.length; i++) {
+    let pair = vars[i].split("=");
+    if (decodeURIComponent(pair[0]) === variable) {
+      return decodeURIComponent(pair[1]);
+    }
+  }
+};
+
+const verifyProlific = () => {
+  return getQueryVariable("PROLIFIC_ID") !== undefined;
+};
+
+const getProlificId = () => {
+  const prolificId = getQueryVariable("PROLIFIC_PID");
+  return prolificId
+};
 
 // add a random number between 0 and offset to the base number
 const jitter = (base, offset) => (
@@ -32,7 +51,6 @@ const deepCopy = (obj) => JSON.parse(JSON.stringify(obj))
 
 // format a number as a dollar amount
 const formatDollars = (amount) => '$' + parseFloat(amount).toFixed(2)
-
 
 // create a pre-trial wait period
 const generateWaitSet = (trial, waitTime) => {
@@ -98,6 +116,8 @@ export {
   formatDollars,
   generateWaitSet,
   images,
+  verifyProlific,
+  getProlificId,
   startKeypressListener,
   getTurkUniqueId,
   sleep,

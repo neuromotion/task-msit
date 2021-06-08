@@ -11,7 +11,7 @@ const fs = require('fs-extra')
 const log = require('electron-log');
 require("dotenv").config();
 
-const AT_HOME = (process.env.REACT_APP_AT_HOME === 'true')
+const USE_EVENT_MARKER = (process.env.REACT_APP_USE_EVENT_MARKER === 'true')
 // Event Trigger
 const { eventCodes, vendorId, productId, comName } = require('./config/trigger')
 const { isPort, getPort, sendToPort } = require('event-marker')
@@ -33,12 +33,6 @@ const { dataDir } = require('./config/saveData')
 let mainWindow
 
 function createWindow () {
-  if (AT_HOME) {
-    log.info('Task "at home" version.')
-  }
-  else {
-    log.info('Task "clinic" version.')
-  }
   // Create the browser window.
   if (process.env.ELECTRON_START_URL) { // in dev mode, disable web security to allow local file loading
     mainWindow = new BrowserWindow({
@@ -154,7 +148,7 @@ ipc.on('trigger', (event, args) => {
   let code = args
   if (code != undefined) {
     log.info(`Event: ${_.invert(eventCodes)[code]}, code: ${code}`)
-     if (!AT_HOME) {
+     if (USE_EVENT_MARKER) {
        handleEventSend(code)
      }
   }
@@ -262,7 +256,7 @@ process.on('uncaughtException', (error) => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   createWindow()
-  if (!AT_HOME) {
+  if (USE_EVENT_MARKER) {
     setUpPort()
     .then(() => handleEventSend(eventCodes.test_connect))
   }
