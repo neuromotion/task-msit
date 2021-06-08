@@ -53,7 +53,7 @@ const USE_PHOTODIODE =
 // get language file
 const lang = require("../language/en_us.json");
 // TODO: what should this depend on?
-if (process.env.MTURK) {
+if (!IS_ELECTRON) {
   // if this is mturk, merge in the mturk specific language
   const mlang = require("../language/en_us.mturk.json");
   _.merge(lang, mlang);

@@ -3,9 +3,8 @@ import { eventCodes } from "../../config/trigger";
 import $ from "jquery";
 
 // conditionally load electron and psiturk based on MTURK config variable
-const isElectron = IS_ELECTRON; //!MTURK
 let ipcRenderer = false;
-if (isElectron) {
+if (IS_ELECTRON) {
   const electron = window.require("electron");
   ipcRenderer = electron.ipcRenderer;
 }
