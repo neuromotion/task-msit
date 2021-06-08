@@ -15,12 +15,12 @@ import {
   VIDEO,
   VOLUME,
   USE_EVENT_MARKER,
-  USE_PHOTODIODE
+  USE_PHOTODIODE,
 } from "./config/main";
 
 function App() {
   // Variables for time
-  const  startDate = new Date().toISOString();
+  const startDate = new Date().toISOString();
   // Variables for login
   const [loggedIn, setLogin] = useState(false);
   const [ipcRenderer, setRenderer] = useState(false);
@@ -29,7 +29,9 @@ function App() {
   const [envStudyId, setEnvStudyId] = useState("");
   const [currentMethod, setMethod] = useState("default");
   const [reject, setReject] = useState(false);
-  
+  const [firebaseQueryError, setFirebaseQueryError] = useState(false);
+
+  let query = new URLSearchParams(window.location.search);
 
   // Validation functions for desktop case and firebase
   const defaultValidation = async () => {
@@ -66,17 +68,18 @@ function App() {
 
   // Function to add jspsych data on login
   const setLoggedIn = useCallback(
-    (loggedIn, studyId, participantId) =>{
-      if(loggedIn){
+    (loggedIn, studyId, participantId) => {
+      if (loggedIn) {
         jsPsych.data.addProperties({
           participant_id: participantId,
           study_id: studyId,
           start_date: startDate,
         });
       }
-      setLogin(loggedIn)
-    },[startDate],
-  )
+      setLogin(loggedIn);
+    },
+    [startDate]
+  );
 
   // Login logic
   useEffect(() => {
@@ -103,8 +106,9 @@ function App() {
         setEnvStudyId(credentials.envStudyId);
       }
       setMethod("desktop");
-      // If online
-    } else {
+    }
+    // If online
+    else {
       // If MTURK
       if (MTURK) {
         /* eslint-disable */
@@ -112,9 +116,10 @@ function App() {
         const turkId = getTurkUniqueId();
         setPsiturk(new PsiTurk(turkId, "/complete"));
         setMethod("mturk");
-        setLoggedIn(true, "mturk", turkId)
+        setLoggedIn(true, "mturk", turkId);
         /* eslint-enable */
       }
+
       // If prolific
       else if (PROLIFIC) {
         const pID = getProlificId();
@@ -125,14 +130,29 @@ function App() {
           setReject(true);
         }
       }
+
       // If firebase
       else if (FIREBASE) {
         setMethod("firebase");
+        // Autologin with query parameters
+        const participantId = query.get("participantID");
+        const studyId = query.get("studyID");
+        if (participantId && studyId) {
+          initParticipant(participantId, studyId, startDate)
+            // Logs in depending on result from promise
+            .then((loggedIn) => {
+              if (loggedIn) {
+                setLoggedIn(loggedIn, studyId, participantId);
+              } else {
+                setFirebaseQueryError(true);
+              }
+            });
+        }
       } else {
         setReject(true);
       }
     }
-  }, [setLoggedIn]);
+  }, [setLoggedIn, query, startDate]);
 
   if (reject) {
     return (
@@ -176,12 +196,12 @@ function App() {
             envParticipantId={envParticipantId}
             envStudyId={envStudyId}
             onLogin={setLoggedIn}
+            firebaseQueryError={firebaseQueryError}
           />
         )}
       </>
     );
   }
-  
 }
 
 export default App;

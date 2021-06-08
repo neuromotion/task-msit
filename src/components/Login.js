@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
+function Login({ onLogin, envParticipantId, envStudyId, validationFunction, firebaseQueryError }) {
   // State variables for login screen
   const [participantId, setParticipant] = useState("");
   const [studyId, setStudy] = useState("");
@@ -10,9 +10,12 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
 
   useEffect(() => {
     // Update based on environment variables
+    if (firebaseQueryError) {
+      setError('Your link does not contain valid credentials, please enter your Participant ID and Study ID manually')
+    }
     setParticipant(envParticipantId);
     setStudy(envStudyId);
-  }, [envParticipantId, envStudyId]);
+  }, [envParticipantId, envStudyId, firebaseQueryError]);
 
   // Checks if forms are filled in
   function validateForm() {
@@ -29,7 +32,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
       if (loggedIn) {
         onLogin(loggedIn, studyId, participantId);
       } else {
-        setError(true);
+        setError('The participant ID and study ID do not match');
       }
     });
   }
@@ -39,7 +42,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
       <div className="width-50">
         {error ? (
           <div className="alert alert-danger" role="alert">
-            The participant ID and study ID do not match
+            {error}
           </div>
         ) : null}
         <Form className="centered-h-v" onSubmit={handleSubmit}>
