@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 
-function Login({ onLogin, envParticipantId, envStudyId, validationFunction, firebaseQueryError }) {
+function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
   // State variables for login screen
   const [participantId, setParticipant] = useState("");
   const [studyId, setStudy] = useState("");
@@ -10,12 +10,9 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction, fire
 
   useEffect(() => {
     // Update based on environment variables
-    if (firebaseQueryError) {
-      setError('Your link does not contain valid credentials, please enter your Participant ID and Study ID manually')
-    }
     setParticipant(envParticipantId);
     setStudy(envStudyId);
-  }, [envParticipantId, envStudyId, firebaseQueryError]);
+  }, [envParticipantId, envStudyId]);
 
   // Checks if forms are filled in
   function validateForm() {
@@ -32,7 +29,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction, fire
       if (loggedIn) {
         onLogin(loggedIn, studyId, participantId);
       } else {
-        setError('The participant ID and study ID do not match');
+        setError(true);
       }
     });
   }
@@ -42,7 +39,7 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction, fire
       <div className="width-50">
         {error ? (
           <div className="alert alert-danger" role="alert">
-            {error}
+            The participant ID and study ID do not match
           </div>
         ) : null}
         <Form className="centered-h-v" onSubmit={handleSubmit}>
@@ -50,7 +47,6 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction, fire
             <Form.Label>Participant ID</Form.Label>
             <Form.Control
               autoFocus
-              readOnly={envParticipantId !== "" ? true : false}
               type="participantId"
               value={participantId}
               onChange={(e) => setParticipant(e.target.value)}
@@ -59,7 +55,6 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction, fire
           <Form.Group className="width-100" size="lg" controlId="studyId">
             <Form.Label>Study ID</Form.Label>
             <Form.Control
-              readOnly={envStudyId !== "" ? true : false}
               type="studyId"
               value={studyId}
               onChange={(e) => setStudy(e.target.value)}

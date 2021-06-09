@@ -29,9 +29,8 @@ function App() {
   const [envStudyId, setEnvStudyId] = useState("");
   const [currentMethod, setMethod] = useState("default");
   const [reject, setReject] = useState(false);
-  const [firebaseQueryError, setFirebaseQueryError] = useState(false);
 
-  let query = new URLSearchParams(window.location.search);
+  const query = new URLSearchParams(window.location.search);
 
   // Validation functions for desktop case and firebase
   const defaultValidation = async () => {
@@ -137,22 +136,17 @@ function App() {
         // Autologin with query parameters
         const participantId = query.get("participantID");
         const studyId = query.get("studyID");
-        if (participantId && studyId) {
-          initParticipant(participantId, studyId, startDate)
-            // Logs in depending on result from promise
-            .then((loggedIn) => {
-              if (loggedIn) {
-                setLoggedIn(loggedIn, studyId, participantId);
-              } else {
-                setFirebaseQueryError(true);
-              }
-            });
+        if (participantId) {
+          setEnvParticipantId(participantId)
+        }
+        if (studyId) {
+          setEnvStudyId(studyId)
         }
       } else {
         setReject(true);
       }
     }
-  }, [setLoggedIn, query, startDate]);
+  }, [setLoggedIn, query]);
 
   if (reject) {
     return (
@@ -196,7 +190,6 @@ function App() {
             envParticipantId={envParticipantId}
             envStudyId={envStudyId}
             onLogin={setLoggedIn}
-            firebaseQueryError={firebaseQueryError}
           />
         )}
       </>
