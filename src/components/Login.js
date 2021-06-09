@@ -47,7 +47,6 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
             <Form.Label>Participant ID</Form.Label>
             <Form.Control
               autoFocus
-              readOnly={envParticipantId !== "" ? true : false}
               type="participantId"
               value={participantId}
               onChange={(e) => setParticipant(e.target.value)}
@@ -56,7 +55,6 @@ function Login({ onLogin, envParticipantId, envStudyId, validationFunction }) {
           <Form.Group className="width-100" size="lg" controlId="studyId">
             <Form.Label>Study ID</Form.Label>
             <Form.Control
-              readOnly={envStudyId !== "" ? true : false}
               type="studyId"
               value={studyId}
               onChange={(e) => setStudy(e.target.value)}
