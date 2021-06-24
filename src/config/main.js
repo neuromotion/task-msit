@@ -5,7 +5,8 @@
 import { jsPsych } from "jspsych-react";
 import _ from "lodash";
 import { eventCodes } from "./trigger";
-import { verifyProlific } from "../lib/utils";
+import { init } from "@brown-ccv/behavioral-task-trials";
+import { getProlificId } from "../lib/utils";
 
 require("dotenv").config();
 
@@ -25,35 +26,33 @@ const audioCodes = {
   type: "sine",
 };
 
-const MTURK = !jsPsych.turk.turkInfo().outsideTurk;
-let PROLIFIC = verifyProlific() && !MTURK;
-let IS_ELECTRON = true;
-let FIREBASE = process.env.REACT_APP_FIREBASE === "true";
-
-// Could work on this logic
+// is this mechanical turk?
+let USE_MTURK = !jsPsych.turk.turkInfo().outsideTurk;
+let USE_PROLIFIC = getProlificId() && !USE_MTURK;
+let USE_ELECTRON = true;
+let USE_FIREBASE = process.env.REACT_APP_FIREBASE === "true";
 
 try {
   window.require("electron");
 } catch {
-  IS_ELECTRON = false;
+  USE_ELECTRON = false;
 }
-
-// these variables depend on IS_ELECTRON
 // whether or not to ask the participant to adjust the volume
-const VOLUME = process.env.REACT_APP_VOLUME === "true";
+const USE_VOLUME = process.env.REACT_APP_VOLUME === "true";
+// these variables depend on USE_ELECTRON
 // whether or not to enable video
-const VIDEO = process.env.REACT_APP_VIDEO === "true" && IS_ELECTRON;
+const USE_CAMERA = process.env.REACT_APP_VIDEO === "true" && USE_ELECTRON;
 // whether or not the EEG/event marker is available
-const USE_EVENT_MARKER =
-  process.env.REACT_APP_USE_EVENT_MARKER === "true" && IS_ELECTRON;
+const USE_EEG =
+  process.env.REACT_APP_USE_EEG === "true" && USE_ELECTRON;
 // whether or not the photodiode is in use
 const USE_PHOTODIODE =
-  process.env.REACT_APP_USE_PHOTODIODE === "true" && IS_ELECTRON;
+  process.env.REACT_APP_USE_PHOTODIODE === "true" && USE_ELECTRON;
 
 // get language file
 const lang = require("../language/en_us.json");
 // TODO: what should this depend on?
-if (!IS_ELECTRON) {
+if (!USE_ELECTRON) {
   // if this is mturk, merge in the mturk specific language
   const mlang = require("../language/en_us.mturk.json");
   _.merge(lang, mlang);
@@ -61,18 +60,23 @@ if (!IS_ELECTRON) {
 
 const taskName = "MSIT";
 
+// setting config for trials
+const config = init({
+  USE_PHOTODIODE,
+  USE_EEG,
+  USE_ELECTRON,
+  USE_MTURK,
+  USE_VOLUME,
+  USE_CAMERA,
+  USE_PROLIFIC,
+  USE_FIREBASE
+});
+
 export {
   keys,
   lang,
   eventCodes,
-  MTURK,
-  IS_ELECTRON,
-  PROLIFIC,
-  VIDEO,
-  FIREBASE,
-  VOLUME,
-  USE_EVENT_MARKER,
-  USE_PHOTODIODE,
+  config,
   audioCodes,
   taskName,
 };

@@ -1,4 +1,4 @@
-import { lang, IS_ELECTRON, USE_EVENT_MARKER } from '../config/main'
+import { lang, config } from '../config/main'
 import { baseStimulus } from '../lib/markup/stimuli'
 
 const screenOne = baseStimulus(`
@@ -138,7 +138,7 @@ const instructions = () => {
     screenFifteen,
   ]
 
-  if (IS_ELECTRON && !USE_EVENT_MARKER) tl.splice(13,1)
+  if (config.USE_ELECTRON && !config.USE_EEG) tl.splice(13,1)
 
   return {
     type: 'instructions',

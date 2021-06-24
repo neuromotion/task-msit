@@ -9,9 +9,11 @@ const ipc = require('electron').ipcMain
 const _ = require('lodash')
 const fs = require('fs-extra')
 const log = require('electron-log');
-require("dotenv").config();
 
-const USE_EVENT_MARKER = (process.env.REACT_APP_USE_EVENT_MARKER === 'true')
+// Define default environment variables
+let USE_EEG = false
+let VIDEO = false
+
 // Event Trigger
 const { eventCodes, vendorId, productId, comName } = require('./config/trigger')
 const { isPort, getPort, sendToPort } = require('event-marker')
@@ -142,13 +144,23 @@ const handleEventSend = (code) => {
   }
 }
 
-// EVENT TRIGGER
 
+// Update env variables with buildtime values from frontend
+ipc.on('updateEnvironmentVariables', (event, args) => {
+  USE_EEG = args.USE_EEG
+  VIDEO = args.USE_CAMERA
+  if(USE_EEG) {
+    setUpPort()
+    .then(() => handleEventSend(eventCodes.test_connect))
+  }
+})
+
+// EVENT TRIGGER
 ipc.on('trigger', (event, args) => {
   let code = args
   if (code != undefined) {
     log.info(`Event: ${_.invert(eventCodes)[code]}, code: ${code}`)
-     if (USE_EVENT_MARKER) {
+     if (USE_EEG) {
        handleEventSend(code)
      }
   }
@@ -204,13 +216,13 @@ ipc.on('data', (event, args) => {
 // Save Video
 
 ipc.on('save_video', (event, fileName, buffer) => {
-  
-  const desktop = app.getPath('desktop')
-  const name = app.getName()
-  const today = new Date(Date.now())
-  const date = today.toISOString().slice(0,10)
-  const fullPath = path.join(desktop, dataDir, studyID, participantID, date, name, fileName)
-  fs.outputFile(fullPath, buffer, err => {
+  if (VIDEO){
+    const desktop = app.getPath('desktop')
+    const name = app.getName()
+    const today = new Date()
+    const date = today.toISOString().slice(0,10)
+    const fullPath = path.join(desktop, dataDir, studyID, participantID, date, name, fileName)
+    fs.outputFile(fullPath, buffer, err => {
       if (err) {
           event.sender.send(ERROR, err.message)
       } else {
@@ -218,6 +230,7 @@ ipc.on('save_video', (event, fileName, buffer) => {
         console.log(fullPath)
       }
   })
+  }
 })
 
 // EXPERMENT END
@@ -256,10 +269,6 @@ process.on('uncaughtException', (error) => {
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
   createWindow()
-  if (USE_EVENT_MARKER) {
-    setUpPort()
-    .then(() => handleEventSend(eventCodes.test_connect))
-  }
 })
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {

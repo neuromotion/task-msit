@@ -7,16 +7,7 @@ import { jsPsych } from "jspsych-react";
 import { getTurkUniqueId, getProlificId, sleep } from "./lib/utils";
 import { initParticipant, addToFirebase } from "./firebase";
 import JsPsychExperiment from "./components/JsPsychExperiment";
-import {
-  MTURK,
-  IS_ELECTRON,
-  FIREBASE,
-  PROLIFIC,
-  VIDEO,
-  VOLUME,
-  USE_EVENT_MARKER,
-  USE_PHOTODIODE,
-} from "./config/main";
+import { config } from "./config/main";
 
 function App() {
   // Variables for time
@@ -83,21 +74,21 @@ function App() {
   // Login logic
   useEffect(() => {
     // For testing and debugging purposes
-    console.log("Turk:", MTURK);
-    console.log("Firebase:", FIREBASE);
-    console.log("Prolific:", PROLIFIC);
-    console.log("Electron:", IS_ELECTRON);
-    console.log("Video:", VIDEO);
-    console.log("Volume:", VOLUME);
-    console.log("Event Marker:", USE_EVENT_MARKER);
-    console.log("Photodiode:", USE_PHOTODIODE);
+    console.log("Turk:", config.USE_MTURK);
+    console.log("Firebase:", config.USE_FIREBASE);
+    console.log("Prolific:", config.USE_PROLIFIC);
+    console.log("Electron:", config.USE_ELECTRON);
+    console.log("Video:", config.USE_CAMERA);
+    console.log("Volume:", config.USE_VOLUME);
+    console.log("Event Marker:", config.USE_EEG);
+    console.log("Photodiode:", config.USE_PHOTODIODE);
     // If on desktop
-    if (IS_ELECTRON) {
-      const electron = window.require("electron");
-      const renderer = electron.ipcRenderer;
-      setRenderer(renderer);
+    if (config.USE_ELECTRON) {
+      const { ipcRenderer } = window.require("electron");
+      setRenderer(ipcRenderer);
+      ipcRenderer.send('updateEnvironmentVariables', config)
       // If at home, fill in fields based on environment variables
-      const credentials = renderer.sendSync("syncCredentials");
+      const credentials = ipcRenderer.sendSync("syncCredentials");
       if (credentials.envParticipantId) {
         setEnvParticipantId(credentials.envParticipantId);
       }
@@ -109,7 +100,7 @@ function App() {
     // If online
     else {
       // If MTURK
-      if (MTURK) {
+      if (config.USE_MTURK) {
         /* eslint-disable */
         window.lodash = _.noConflict();
         const turkId = getTurkUniqueId();
@@ -120,9 +111,9 @@ function App() {
       }
 
       // If prolific
-      else if (PROLIFIC) {
+      else if (config.USE_PROLIFIC) {
         const pID = getProlificId();
-        if (FIREBASE && pID) {
+        if (config.USE_FIREBASE && pID) {
           setMethod("firebase");
           setLoggedIn(true, "prolific", pID);
         } else {
@@ -131,7 +122,7 @@ function App() {
       }
 
       // If firebase
-      else if (FIREBASE) {
+      else if (config.USE_FIREBASE) {
         setMethod("firebase");
         // Autologin with query parameters
         const participantId = query.get("participantID");
@@ -146,7 +137,8 @@ function App() {
         setReject(true);
       }
     }
-  }, [setLoggedIn, query]);
+  // eslint-disable-next-line 
+}, []);
 
   if (reject) {
     return (
