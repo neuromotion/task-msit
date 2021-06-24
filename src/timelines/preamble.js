@@ -2,21 +2,21 @@ import experimentStart from "../trials/experimentStart";
 import startCode from "../trials/startCode";
 import instructions from "../trials/instructions";
 import holdUpMarker from "../trials/holdUpMarker";
-import { USE_EVENT_MARKER, VIDEO, VOLUME } from "../config/main";
+import { config } from "../config/main";
 import adjustVolume from "../trials/adjustVolume";
 import camera from "../trials/camera";
 
 
 let tl = [experimentStart()];
-if (VOLUME) {
+if (config.USE_VOLUME) {
   tl.push(adjustVolume());
 } 
-if (USE_EVENT_MARKER) {
+if (config.USE_EEG) {
   tl.push(holdUpMarker());
   tl.push(startCode());
 }
 tl.push(instructions());
-if (VIDEO) {
+if (config.USE_CAMERA) {
   tl.push(camera());
 }
 

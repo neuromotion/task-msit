@@ -2,7 +2,7 @@ import preamble from './preamble'
 import experimentEnd from '../trials/experimentEnd'
 import taskBlock from './taskBlock'
 
-import { MTURK } from '../config/main'
+import { config } from '../config/main'
 
 const primaryTimeline = [
         preamble,
@@ -16,4 +16,4 @@ const mturkTimeline = [
         experimentEnd(3000)
         ]
 
-export const tl = (MTURK) ? mturkTimeline : primaryTimeline
+export const tl = (config.USE_MTURK) ? mturkTimeline : primaryTimeline
