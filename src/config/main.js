@@ -5,7 +5,6 @@
 import { jsPsych } from "jspsych-react";
 import _ from "lodash";
 import { eventCodes } from "./trigger";
-import { init } from "@brown-ccv/behavioral-task-trials";
 import { getProlificId } from "../lib/utils";
 
 require("dotenv").config();
@@ -61,7 +60,7 @@ if (!USE_ELECTRON) {
 const taskName = "MSIT";
 
 // setting config for trials
-const config = init({
+const config = {
   USE_PHOTODIODE,
   USE_EEG,
   USE_ELECTRON,
@@ -70,7 +69,7 @@ const config = init({
   USE_CAMERA,
   USE_PROLIFIC,
   USE_FIREBASE
-});
+};
 
 export {
   keys,
