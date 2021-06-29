@@ -27,8 +27,6 @@ if (activeProductId) {
   log.info("COM Name", activeComName)
 }
 
-// Data Saving
-const { dataDir } = require('./config/saveData')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -166,10 +164,15 @@ ipc.on('trigger', (event, args) => {
   }
 })
 
+// <studyID> will be created on Desktop and used as root folder for saving data
+// data save format is ~/Desktop/<studyID>/<participantID>/<date>/<filename>.json
+// it is also incrementally saved to the user's app data folder (logged to console)
+
 // INCREMENTAL FILE SAVING
 let stream = false
 let fileName = ''
 let filePath = ''
+let directoryPath = ''
 let participantID = ''
 let studyID = ''
 let images = []
@@ -193,8 +196,13 @@ ipc.on('data', (event, args) => {
     const dir = app.getPath('userData')
     participantID = args.participant_id
     studyID = args.study_id
-    fileName = `pid_${participantID}_${Date.now()}.json`
+    const desktop = app.getPath('desktop')
+    const name = app.getName()
+    const today = new Date()
+    const date = today.toISOString().slice(0,10)
+    fileName = `pid_${participantID}_${today.getTime()}.json`
     filePath = path.resolve(dir, fileName)
+    directoryPath = path.join(desktop, studyID, participantID, date, name)
     startTrial = args.trial_index
     log.warn(filePath)
     stream = fs.createWriteStream(filePath, {flags:'ax+'});
@@ -217,11 +225,7 @@ ipc.on('data', (event, args) => {
 
 ipc.on('save_video', (event, fileName, buffer) => {
   if (VIDEO){
-    const desktop = app.getPath('desktop')
-    const name = app.getName()
-    const today = new Date()
-    const date = today.toISOString().slice(0,10)
-    const fullPath = path.join(desktop, dataDir, studyID, participantID, date, name, fileName)
+    const fullPath = path.join(directoryPath, fileName)
     fs.outputFile(fullPath, buffer, err => {
       if (err) {
           event.sender.send(ERROR, err.message)
@@ -296,15 +300,10 @@ app.on('will-quit', () => {
     stream = false
 
     // copy file to config location
-    const desktop = app.getPath('desktop')
-    const name = app.getName()
-    const today = new Date(Date.now())
-    const date = today.toISOString().slice(0,10)
-    const copyPath = path.join(desktop, dataDir, studyID, participantID, date, name)
-    fs.mkdir(copyPath, { recursive: true }, (err) => {
+    fs.mkdir(directoryPath, { recursive: true }, (err) => {
       log.error(err)
-      fs.copyFileSync(filePath, path.join(copyPath, fileName))
-
+      fs.copyFileSync(filePath, path.join(directoryPath, fileName))
+  
     })
   }
 })
