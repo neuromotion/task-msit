@@ -8,6 +8,7 @@ import { getTurkUniqueId, getProlificId, sleep } from "./lib/utils";
 import { initParticipant, addToFirebase } from "./firebase";
 import JsPsychExperiment from "./components/JsPsychExperiment";
 import { config } from "./config/main";
+import { version } from "../package.json"
 
 function App() {
   // Variables for time
@@ -64,6 +65,7 @@ function App() {
           participant_id: participantId,
           study_id: studyId,
           start_date: startDate,
+          task_version: version
         });
       }
       setLogin(loggedIn);
