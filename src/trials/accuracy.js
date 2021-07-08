@@ -1,4 +1,4 @@
-import { lang } from '../config/main'
+import { lang, config } from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 import { jsPsych } from 'jspsych-react'
@@ -40,7 +40,12 @@ const accuracy = (training, num_trials, num_complete) => {
         }
       } else {
         const j_data = jsPsych.data.get().last(1).values()[0]
-        trial.prompt = lang.prompt.continue.block + (num_complete/96).toString() + lang.prompt.continue.of + j_data.num_blocks + lang.prompt.continue.next_block
+        if (config.USE_EEG){
+          trial.prompt = lang.prompt.continue.block + (num_complete/96).toString() + lang.prompt.continue.of + j_data.num_blocks + lang.prompt.continue.next_block
+        }
+        else {
+          trial.prompt = lang.prompt.continue.block + (num_complete/96).toString() + lang.prompt.continue.of + '8' + lang.prompt.continue.next_block
+        }
       }
     },
     prompt: 'temp'
