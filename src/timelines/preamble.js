@@ -5,13 +5,14 @@ import holdUpMarker from "../trials/holdUpMarker";
 import { config } from "../config/main";
 import adjustVolume from "../trials/adjustVolume";
 import camera from "../trials/camera";
-
+import numBlocks from '../trials/blockNumber'
 
 let tl = [experimentStart()];
 if (config.USE_VOLUME) {
   tl.push(adjustVolume());
 } 
 if (config.USE_EEG) {
+  tl.push(numBlocks())
   tl.push(holdUpMarker());
   tl.push(startCode());
 }

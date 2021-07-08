@@ -7,13 +7,13 @@ import mainBlock from '../config/pcps_msit_eeg_trial_sequence.json'
 const taskBlock = (training) => {
 	const block = training ? trainingBlock : mainBlock;
 	const num_trials = training ? block.length : 96;
-	let timeline = block.map( (trial) => {
+	let timeline = block.flatMap( (trial) => {
 		if (trial.Trial % 2 === 1) {
-			return fixation(trial.Duration*1000)
+			return fixation(trial)
 		}
 		else {
 			if (trial.Trial % 96 === 0) {
-				return { timeline: [interference(trial), accuracy(training, num_trials, trial.Trial)]}
+				return [interference(trial), accuracy(training, num_trials, trial.Trial)]
 			}
 			else {
 				return interference(trial)
