@@ -13,10 +13,11 @@ const log = require('electron-log');
 // Define default environment variables
 let USE_EEG = false
 let VIDEO = false
+const HIDE_FRAME_ELECTRON = process.env.REACT_APP_HIDE_FRAME_ELECTRON === "true";
 
 // Event Trigger
 const { eventCodes, vendorId, productId, comName } = require('./config/trigger')
-const { isPort, getPort, sendToPort } = require('event-marker')
+const { getPort, sendToPort } = require('event-marker')
 
 // Override product ID if environment variable set
 const activeProductId = process.env.EVENT_MARKER_PRODUCT_ID || productId
@@ -48,7 +49,7 @@ function createWindow () {
     mainWindow = new BrowserWindow({
       fullscreen: true,
       icon: './favicon.ico',
-      frame: false,
+      frame: !HIDE_FRAME_ELECTRON,
       webPreferences: {
         nodeIntegration: true,
         webSecurity: true
@@ -100,7 +101,7 @@ const setUpPort = async () => {
       }
       dialog.showMessageBox(mainWindow, {type: "error", message: "Error communicating with event marker.", title: "Task Error", buttons: buttons, defaultId: 0})
         .then((opt) => {
-          if (opt.response == 0) {
+          if (opt.response === 0) {
             app.exit()
           } else {
             SKIP_SENDING_DEV = true
@@ -127,12 +128,12 @@ const handleEventSend = (code) => {
     dialog.showMessageBox(mainWindow, {type: "error", message: message, title: "Task Error", buttons: buttons, defaultId: 0})
       .then((resp) => {
         let opt = resp.response
-        if (opt == 0) { // quit
+        if (opt === 0) { // quit
           app.exit()
-        } else if (opt == 1) { // retry
+        } else if (opt === 1) { // retry
           setUpPort()
           .then(() => handleEventSend(code))
-        } else if (opt == 2) {
+        } else if (opt === 2) {
           SKIP_SENDING_DEV = true
         }
       })
@@ -156,7 +157,7 @@ ipc.on('updateEnvironmentVariables', (event, args) => {
 // EVENT TRIGGER
 ipc.on('trigger', (event, args) => {
   let code = args
-  if (code != undefined) {
+  if (code !== undefined) {
     log.info(`Event: ${_.invert(eventCodes)[code]}, code: ${code}`)
      if (USE_EEG) {
        handleEventSend(code)
@@ -175,7 +176,6 @@ let filePath = ''
 let directoryPath = ''
 let participantID = ''
 let studyID = ''
-let images = []
 let startTrial = -1
 
 
@@ -238,7 +238,7 @@ ipc.on('save_video', (event, fileName, buffer) => {
 })
 
 // EXPERMENT END
-ipc.on('end', (event, args) => {
+ipc.on('end', () => {
   // quit app
   app.quit()
 })
@@ -252,7 +252,7 @@ ipc.on('error', (event, args) => {
   }
   const opt = dialog.showMessageBoxSync(mainWindow, {type: "error", message: args, title: "Task Error", buttons: buttons})
 
-  if (opt == 0) app.quit()
+  if (opt === 0) app.quit()
 })
 
 
