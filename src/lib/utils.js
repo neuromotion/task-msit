@@ -93,6 +93,11 @@ const getTurkUniqueId = () => {
   return uniqueId
 }
 
+const getBlockNumber = (data) => {
+  const blockNumber = JSON.parse(data.responses)['Q0']
+  jsPsych.data.addProperties({num_blocks: blockNumber})
+  console.log("NumBlocks", blockNumber)
+}
 
 const beep = (audioCodes) => {
   const context = new AudioContext()
@@ -123,5 +128,6 @@ export {
   sleep,
   removeCursor,
   addCursor,
-  beep
+  beep,
+  getBlockNumber
 }

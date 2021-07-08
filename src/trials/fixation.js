@@ -4,7 +4,7 @@ import { fixationHTML } from '../lib/markup/fixation'
 import { jsPsych } from 'jspsych-react'
 import { removeCursor } from '../lib/utils'
 
-const fixation = (duration) => {
+const fixation = (trial) => {
   let stimulus = fixationHTML + photodiodeGhostBox()
 
   const code = eventCodes.fixation;
@@ -14,7 +14,7 @@ const fixation = (duration) => {
     choices: jsPsych.NO_KEYS,
     stimulus: stimulus,
     response_ends_trial: false,
-    trial_duration: duration,
+    trial_duration: trial.Duration*1000,
     on_load: () => {
       removeCursor('experiment')
       pdSpotEncode(code)

@@ -8,6 +8,12 @@ const accuracy = (training, num_trials, num_complete) => {
     type: 'html_keyboard_response',
     stimulus: '',
     data: {percent_correct: 0},
+    on_finish: (data) => {
+      const j_data = jsPsych.data.get().last(1).values()[0]
+      if (!training && num_complete>=j_data.num_blocks*96) {
+        jsPsych.endCurrentTimeline()
+      }
+    },
     on_start: (trial) => {
       const data = jsPsych.data.get().last(num_trials).values()
       const num_correct = data.reduce((accumulator, item) => {
@@ -33,7 +39,8 @@ const accuracy = (training, num_trials, num_complete) => {
           trial.prompt = lang.prompt.continue.training_success
         }
       } else {
-        trial.prompt = lang.prompt.continue.block + (num_complete/96).toString() + lang.prompt.continue.next_block
+        const j_data = jsPsych.data.get().last(1).values()[0]
+        trial.prompt = lang.prompt.continue.block + (num_complete/96).toString() + lang.prompt.continue.of + j_data.num_blocks + lang.prompt.continue.next_block
       }
     },
     prompt: 'temp'
