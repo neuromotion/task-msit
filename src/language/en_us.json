@@ -11,7 +11,8 @@
       "training_failed": "Accuracy below 80%, press any button to repeat the training block.",
       "training_success": "Training complete, press any button to begin the task.",
       "block": "Block ",
-      "next_block": " of 8 complete, press any button to continue."
+      "of": " of ",
+      "next_block": " complete, press any button to continue."
     },
     "focus": "Make sure the photodiode is aligned and the EEG recording has begun before continuing.",
     "fullscreen": "Press 'cmd + ctrl + F' to toggle Fullscreen.",
@@ -56,6 +57,9 @@
     "p14": "2. Try not to blink while the numbers are on the screen. Instead try to blink right after you've made your response and the dot comes on the screen.",
     "p15": "3. Try to relax your shoulders, neck, and face as much as possible. Do not clench your jaw.",
     "practice_trials": "We will practice with some example trials. <br> Remember, respond only to the identity of the number that is different, not the position of the number."
+  },
+  "block_number": {
+    "set": "Please enter the desired number of task blocks."
   },
   "eventMarker" : {
     "found": "Hold the USB event marker in front of the camera.",
