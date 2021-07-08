@@ -9,9 +9,11 @@ const accuracy = (training, num_trials, num_complete) => {
     stimulus: '',
     data: {percent_correct: 0},
     on_finish: (data) => {
-      const j_data = jsPsych.data.get().last(1).values()[0]
+      if (config.USE_EEG){
+        const j_data = jsPsych.data.get().last(1).values()[0]
       if (!training && num_complete>=j_data.num_blocks*96) {
         jsPsych.endCurrentTimeline()
+      }
       }
     },
     on_start: (trial) => {
