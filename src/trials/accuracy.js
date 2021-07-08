@@ -11,8 +11,8 @@ const accuracy = (training, num_trials, num_complete) => {
     on_finish: (data) => {
       if (config.USE_EEG){
         const j_data = jsPsych.data.get().last(1).values()[0]
-      if (!training && num_complete>=j_data.num_blocks*96) {
-        jsPsych.endCurrentTimeline()
+        if (!training && num_complete>=j_data.num_blocks*96) {
+          jsPsych.endCurrentTimeline()
       }
       }
     },
