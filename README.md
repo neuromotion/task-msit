@@ -16,13 +16,13 @@ The task involves finding which out of three numbers is different from the other
 
 1. Clone the repo
 
-```git clone https://github.com/neuromotion/resting-state.git```
+```git clone https://github.com/brown-ccv/task-msit.git```
 2. Navigate to the directory
 
-```cd resting-state```
+```cd task-msit```
 3. Install `npm` packages (`-D` installs development dependencies in addition to production ones)
 
-```npm install -D```
+```npm install```
 4. Run in development mode
 
 ```npm run dev```
