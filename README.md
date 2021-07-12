@@ -1,6 +1,6 @@
 # MSIT
 <p style="float:left; margin-right:2em">
-  <img alt="Resting State Icon" src="msit.svg" width="200" />
+  <img alt="MSIT Icon" src="msit.svg" width="200" />
 </p>
 
 [![Actions Status](https://github.com/brown-ccv/task-msit/workflows/Test%2C%20Build%2C%20and%20Package/badge.svg)](https://github.com/brown-ccv/task-msit/actions)
