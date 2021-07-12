@@ -20,7 +20,7 @@ The task involves finding which out of three numbers is different from the other
 2. Navigate to the directory
 
 ```cd task-msit```
-3. Install `npm` packages (`-D` installs development dependencies in addition to production ones)
+3. Install `npm` packages
 
 ```npm install```
 4. Run in development mode
