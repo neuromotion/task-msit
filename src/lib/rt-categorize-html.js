@@ -116,17 +116,13 @@ export function rt_categorize_html() {
 
     // create response function
     var after_response = function(info) {
-
       // kill any remaining setTimeout handlers
       jsPsych.pluginAPI.clearAllTimeouts();
 
       // clear keyboard listener
       jsPsych.pluginAPI.cancelAllKeyboardResponses();
 
-      var correct = false;
-      if (trial.key_answer === info.key) {
-        correct = true;
-      }
+      const correct = trial.key_answer === info.key - 96 || trial.key_answer === info.key - 48;
 
       // save data
       trial_data = {
