@@ -1,4 +1,4 @@
-import { lang, config } from '../config/main'
+import { lang, envConfig } from '../config/main'
 import { baseStimulus } from '../lib/markup/stimuli'
 
 const screenOne = baseStimulus(`
@@ -138,7 +138,7 @@ const instructions = () => {
     screenFifteen,
   ]
 
-  if (config.USE_ELECTRON && !config.USE_EEG) tl.splice(13,1)
+  if (envConfig.USE_ELECTRON && !envConfig.USE_EEG) tl.splice(13,1)
 
   return {
     type: 'instructions',

@@ -48,9 +48,6 @@ const USE_EEG =
 const USE_PHOTODIODE =
   process.env.REACT_APP_USE_PHOTODIODE === "true" && USE_ELECTRON;
 
-const ACCURACY_CUTOFF = process.env.REACT_APP_MSIT_ACCURACY_CUTOFF || 50
-const RESPONSE_TIME_LIMIT = process.env.REACT_APP_MSIT_RESPONSE_TIME_LIMIT || 5000
-
 // get language file
 const lang = require("../language/en_us.json");
 // TODO: what should this depend on?
@@ -63,7 +60,7 @@ if (!USE_ELECTRON) {
 const taskName = "MSIT";
 
 // setting config for trials
-const config = {
+const envConfig = {
   USE_PHOTODIODE,
   USE_EEG,
   USE_ELECTRON,
@@ -78,9 +75,7 @@ export {
   keys,
   lang,
   eventCodes,
-  config,
+  envConfig,
   audioCodes,
   taskName,
-  ACCURACY_CUTOFF,
-  RESPONSE_TIME_LIMIT
 };

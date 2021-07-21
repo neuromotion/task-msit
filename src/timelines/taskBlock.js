@@ -3,9 +3,8 @@ import interference from '../trials/interference'
 import accuracy from '../trials/accuracy'
 import trainingBlock from '../config/pcps_msit_eeg_train_sequence.json'
 import mainBlock from '../config/pcps_msit_eeg_trial_sequence.json'
-import { ACCURACY_CUTOFF } from '../config/main'
 
-const taskBlock = (training) => {
+const taskBlock = (training, experimentConfig) => {
 	const block = training ? trainingBlock : mainBlock;
 	const num_trials = training ? block.length : 96;
 	let timeline = block.flatMap( (trial) => {
@@ -14,10 +13,10 @@ const taskBlock = (training) => {
 		}
 		else {
 			if (trial.Trial % 96 === 0) {
-				return [interference(trial), accuracy(training, num_trials, trial.Trial)]
+				return [interference(trial, experimentConfig), accuracy(training, num_trials, trial.Trial, experimentConfig)]
 			}
 			else {
-				return interference(trial)
+				return interference(trial, experimentConfig)
 			}
 		}
 	});
@@ -26,11 +25,7 @@ const taskBlock = (training) => {
 	  stimulus: '',
 		timeline: timeline,
 		loop_function: (data) => {
-			if (training && data.values()[data.values().length-1].percent_correct < ACCURACY_CUTOFF) {
-				return true
-			} else {
-				return false
-			}
+			return training && data.values()[data.values().length - 1].percent_correct < experimentConfig.accuracy_cutoff;
 		}
 	}
 }

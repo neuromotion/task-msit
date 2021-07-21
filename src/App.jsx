@@ -7,7 +7,7 @@ import { jsPsych } from "jspsych-react";
 import { getTurkUniqueId, getProlificId, sleep } from "./lib/utils";
 import { initParticipant, addToFirebase } from "./firebase";
 import JsPsychExperiment from "./components/JsPsychExperiment";
-import { config } from "./config/main";
+import { envConfig } from "./config/main";
 import { version } from "../package.json"
 
 function App() {
@@ -19,6 +19,8 @@ function App() {
   const [psiturk, setPsiturk] = useState(false);
   const [envParticipantId, setEnvParticipantId] = useState("");
   const [envStudyId, setEnvStudyId] = useState("");
+  const [participantID, setParticipantID] = useState("")
+  const [studyID, setStudyID] = useState("")
   const [currentMethod, setMethod] = useState("default");
   const [reject, setReject] = useState(false);
 
@@ -33,7 +35,7 @@ function App() {
   };
 
   // Adding data functions for firebase, electron adn Mturk
-  const defaultFunction = (data) => {};
+  const defaultFunction = () => {};
   const firebaseUpdateFunction = (data) => {
     addToFirebase(data);
   };
@@ -68,6 +70,8 @@ function App() {
           task_version: version
         });
       }
+      setParticipantID(participantId)
+      setStudyID(studyId)
       setLogin(loggedIn);
     },
     [startDate]
@@ -76,19 +80,19 @@ function App() {
   // Login logic
   useEffect(() => {
     // For testing and debugging purposes
-    console.log("Turk:", config.USE_MTURK);
-    console.log("Firebase:", config.USE_FIREBASE);
-    console.log("Prolific:", config.USE_PROLIFIC);
-    console.log("Electron:", config.USE_ELECTRON);
-    console.log("Video:", config.USE_CAMERA);
-    console.log("Volume:", config.USE_VOLUME);
-    console.log("Event Marker:", config.USE_EEG);
-    console.log("Photodiode:", config.USE_PHOTODIODE);
+    console.log("Turk:", envConfig.USE_MTURK);
+    console.log("Firebase:", envConfig.USE_FIREBASE);
+    console.log("Prolific:", envConfig.USE_PROLIFIC);
+    console.log("Electron:", envConfig.USE_ELECTRON);
+    console.log("Video:", envConfig.USE_CAMERA);
+    console.log("Volume:", envConfig.USE_VOLUME);
+    console.log("Event Marker:", envConfig.USE_EEG);
+    console.log("Photodiode:", envConfig.USE_PHOTODIODE);
     // If on desktop
-    if (config.USE_ELECTRON) {
+    if (envConfig.USE_ELECTRON) {
       const { ipcRenderer } = window.require("electron");
       setRenderer(ipcRenderer);
-      ipcRenderer.send('updateEnvironmentVariables', config)
+      ipcRenderer.send('updateEnvironmentVariables', envConfig)
       // If at home, fill in fields based on environment variables
       const credentials = ipcRenderer.sendSync("syncCredentials");
       if (credentials.envParticipantId) {
@@ -102,7 +106,7 @@ function App() {
     // If online
     else {
       // If MTURK
-      if (config.USE_MTURK) {
+      if (envConfig.USE_MTURK) {
         /* eslint-disable */
         window.lodash = _.noConflict();
         const turkId = getTurkUniqueId();
@@ -113,9 +117,9 @@ function App() {
       }
 
       // If prolific
-      else if (config.USE_PROLIFIC) {
+      else if (envConfig.USE_PROLIFIC) {
         const pID = getProlificId();
-        if (config.USE_FIREBASE && pID) {
+        if (envConfig.USE_FIREBASE && pID) {
           setMethod("firebase");
           setLoggedIn(true, "prolific", pID);
         } else {
@@ -124,7 +128,7 @@ function App() {
       }
 
       // If firebase
-      else if (config.USE_FIREBASE) {
+      else if (envConfig.USE_FIREBASE) {
         setMethod("firebase");
         // Autologin with query parameters
         const participantId = query.get("participantID");
@@ -171,6 +175,8 @@ function App() {
                 default: defaultFunction,
               }[currentMethod]
             }
+            participantID={participantID}
+            studyID={studyID}
           />
         ) : (
           <Login

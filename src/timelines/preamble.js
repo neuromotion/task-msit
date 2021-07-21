@@ -2,22 +2,22 @@ import experimentStart from "../trials/experimentStart";
 import startCode from "../trials/startCode";
 import instructions from "../trials/instructions";
 import holdUpMarker from "../trials/holdUpMarker";
-import { config } from "../config/main";
+import { envConfig } from "../config/main";
 import adjustVolume from "../trials/adjustVolume";
 import camera from "../trials/camera";
 import numBlocks from '../trials/blockNumber'
 
 let tl = [experimentStart()];
-if (config.USE_VOLUME) {
+if (envConfig.USE_VOLUME) {
   tl.push(adjustVolume());
 } 
-if (config.USE_EEG) {
+if (envConfig.USE_EEG) {
   tl.push(numBlocks())
   tl.push(holdUpMarker());
   tl.push(startCode());
 }
 tl.push(instructions());
-if (config.USE_CAMERA) {
+if (envConfig.USE_CAMERA) {
   tl.push(camera());
 }
 

@@ -255,6 +255,23 @@ ipc.on('error', (event, args) => {
   if (opt === 0) app.quit()
 })
 
+ipc.on('save-config', (event, config, participantID, studyID) => {
+  const desktop = app.getPath('desktop')
+  const name = app.getName()
+  const today = new Date()
+  const date = today.toISOString().slice(0, 10)
+  const savePath = path.join(
+    desktop,
+    studyID,
+    participantID,
+    date,
+    name
+  )
+  const configFileName = `pid_${participantID}_${Date.now()}_config.json`
+  const saveConfigPath = path.join(savePath, configFileName)
+  fs.writeFile(saveConfigPath, Buffer.from(JSON.stringify(config)))
+})
+
 
 // log uncaught exceptions
 process.on('uncaughtException', (error) => {
