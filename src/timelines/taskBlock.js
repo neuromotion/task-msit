@@ -3,6 +3,7 @@ import interference from '../trials/interference'
 import accuracy from '../trials/accuracy'
 import trainingBlock from '../config/pcps_msit_eeg_train_sequence.json'
 import mainBlock from '../config/pcps_msit_eeg_trial_sequence.json'
+import { ACCURACY_CUTOFF } from '../config/main'
 
 const taskBlock = (training) => {
 	const block = training ? trainingBlock : mainBlock;
@@ -25,7 +26,7 @@ const taskBlock = (training) => {
 	  stimulus: '',
 		timeline: timeline,
 		loop_function: (data) => {
-			if (training && data.values()[data.values().length-1].percent_correct < 80) {
+			if (training && data.values()[data.values().length-1].percent_correct < ACCURACY_CUTOFF) {
 				return true
 			} else {
 				return false

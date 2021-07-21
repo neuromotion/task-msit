@@ -48,6 +48,8 @@ const USE_EEG =
 const USE_PHOTODIODE =
   process.env.REACT_APP_USE_PHOTODIODE === "true" && USE_ELECTRON;
 
+const ACCURACY_CUTOFF = process.env.REACT_APP_MSIT_ACCURACY_CUTOFF || 50
+
 // get language file
 const lang = require("../language/en_us.json");
 // TODO: what should this depend on?
@@ -78,4 +80,5 @@ export {
   config,
   audioCodes,
   taskName,
+  ACCURACY_CUTOFF
 };

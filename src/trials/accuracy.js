@@ -1,4 +1,4 @@
-import { lang, config } from '../config/main'
+import { lang, config, ACCURACY_CUTOFF } from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 import { jsPsych } from 'jspsych-react'
@@ -34,8 +34,8 @@ const accuracy = (training, num_trials, num_complete) => {
       trial.data.percent_correct = 100*2*num_correct/data.length;
       trial.stimulus = baseStimulus(`<h1>${Math.floor(trial.data.percent_correct).toString()+'%'}</h1>`, true) + photodiodeGhostBox();
       if (training) {
-        if (trial.data.percent_correct < 80) {
-          trial.prompt = lang.prompt.continue.training_failed
+        if (trial.data.percent_correct < ACCURACY_CUTOFF) {
+          trial.prompt = lang.prompt.continue.training_failed_accuracy + ACCURACY_CUTOFF + lang.prompt.continue.training_failed_continue
         }
         else {
           trial.prompt = lang.prompt.continue.training_success
