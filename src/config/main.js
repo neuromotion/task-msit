@@ -49,6 +49,7 @@ const USE_PHOTODIODE =
   process.env.REACT_APP_USE_PHOTODIODE === "true" && USE_ELECTRON;
 
 const ACCURACY_CUTOFF = process.env.REACT_APP_MSIT_ACCURACY_CUTOFF || 50
+const RESPONSE_TIME_LIMIT = process.env.REACT_APP_MSIT_RESPONSE_TIME_LIMIT || 5000
 
 // get language file
 const lang = require("../language/en_us.json");
@@ -80,5 +81,6 @@ export {
   config,
   audioCodes,
   taskName,
-  ACCURACY_CUTOFF
+  ACCURACY_CUTOFF,
+  RESPONSE_TIME_LIMIT
 };
