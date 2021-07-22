@@ -61,17 +61,17 @@ function App() {
 
   // Function to add jspsych data on login
   const setLoggedIn = useCallback(
-    (loggedIn, studyId, participantId) => {
+    (loggedIn, newStudyID, newParticipantID) => {
       if (loggedIn) {
         jsPsych.data.addProperties({
-          participant_id: participantId,
-          study_id: studyId,
+          participant_id: newParticipantID,
+          study_id: newStudyID,
           start_date: startDate,
           task_version: version
         });
       }
-      setParticipantID(participantId)
-      setStudyID(studyId)
+      setParticipantID(newParticipantID)
+      setStudyID(newStudyID)
       setLogin(loggedIn);
     },
     [startDate]
@@ -80,14 +80,8 @@ function App() {
   // Login logic
   useEffect(() => {
     // For testing and debugging purposes
-    console.log("Turk:", envConfig.USE_MTURK);
-    console.log("Firebase:", envConfig.USE_FIREBASE);
-    console.log("Prolific:", envConfig.USE_PROLIFIC);
-    console.log("Electron:", envConfig.USE_ELECTRON);
-    console.log("Video:", envConfig.USE_CAMERA);
-    console.log("Volume:", envConfig.USE_VOLUME);
-    console.log("Event Marker:", envConfig.USE_EEG);
-    console.log("Photodiode:", envConfig.USE_PHOTODIODE);
+    console.log("Environment configuration:", envConfig)
+
     // If on desktop
     if (envConfig.USE_ELECTRON) {
       const { ipcRenderer } = window.require("electron");
