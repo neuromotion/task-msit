@@ -1,4 +1,4 @@
 {
-  "accuracy_cutoff": 50,
-  "response_time_limit": 5000
+  "accuracy_cutoff": 80,
+  "response_time_limit": 1250
 }
