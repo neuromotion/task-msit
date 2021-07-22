@@ -1,4 +1,4 @@
-import { eventCodes, config } from '../config/main'
+import { eventCodes, envConfig } from '../config/main'
 import { earningsDisplay } from '../lib/markup/earnings'
 import { photodiodeGhostBox, pdSpotEncode } from '../lib/markup/photodiode'
 
@@ -14,7 +14,7 @@ const beadEnd = (trialDetails, duration) => {
       on_start: (trial) => {
         let earnings = Math.random()
         trial.stimulus = earningsDisplay(earnings)
-        if (!config.USE_MTURK) trial.stimulus += photodiodeGhostBox()
+        if (!envConfig.USE_MTURK) trial.stimulus += photodiodeGhostBox()
       },
       on_finish: (data) => data.code = code
     }

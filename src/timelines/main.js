@@ -1,19 +1,15 @@
-import preamble from './preamble'
-import experimentEnd from '../trials/experimentEnd'
-import taskBlock from './taskBlock'
+import preamble from "./preamble"
+import experimentEnd from "../trials/experimentEnd"
+import taskBlock from "./taskBlock"
+import { envConfig } from "../config/main"
 
-import { config } from '../config/main'
+const tl = (experimentConfig) => {
+  const timeline = [preamble]
+  if (!envConfig.USE_MTURK) {
+    timeline.push(taskBlock(true, experimentConfig), taskBlock(false, experimentConfig))
+  }
+  timeline.push(experimentEnd(3000))
+  return timeline
+}
 
-const primaryTimeline = [
-        preamble,
-        taskBlock(true),
-        taskBlock(false),
-        experimentEnd(3000)
-        ]
-
-const mturkTimeline = [
-        preamble,
-        experimentEnd(3000)
-        ]
-
-export const tl = (config.USE_MTURK) ? mturkTimeline : primaryTimeline
+export { tl }

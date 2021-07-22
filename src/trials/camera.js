@@ -1,11 +1,11 @@
-import { lang, taskName, config} from '../config/main'
+import { lang, taskName, envConfig} from '../config/main'
 import { photodiodeGhostBox } from '../lib/markup/photodiode'
 import { baseStimulus } from '../lib/markup/stimuli'
 import { jsPsych } from 'jspsych-react'
 
 
 let ipcRenderer = false;
-if (config.USE_ELECTRON) {
+if (envConfig.USE_ELECTRON) {
   const electron = window.require('electron');
   ipcRenderer  = electron.ipcRenderer;
 }
@@ -96,7 +96,7 @@ const camera = () => {
     
     },
     on_finish: () => {
-      if (config.USE_CAMERA) {
+      if (envConfig.USE_CAMERA) {
         window.cameraCapture.start()
         window.screenCapture.start()
       }
