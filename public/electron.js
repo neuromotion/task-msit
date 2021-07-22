@@ -215,7 +215,6 @@ ipc.on('data', (event, args) => {
     const userDataDir = app.getPath('userData')
     participantID = args.participant_id
     studyID = args.study_id
-    today = new Date()
     preSavePath = path.resolve(userDataDir, `pid_${participantID}_${today.getTime()}.json`)
     startTrial = args.trial_index
     stream = fs.createWriteStream(preSavePath, {flags:'ax+'});
