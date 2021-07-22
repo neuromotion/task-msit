@@ -180,19 +180,22 @@ let savePath = ""
  * @returns {string} The filepath.
  */
 const getSavePath = (participantID, studyID) => {
-  const desktop = app.getPath('desktop')
-  const name = app.getName()
-  const date = today.toISOString().slice(0, 10)
-  return path.join(
-    desktop,
-    studyID,
-    participantID,
-    date,
-    name
-  )
+  if (participantID !== "" && studyID !== "") {
+    const desktop = app.getPath('desktop')
+    const name = app.getName()
+    const date = today.toISOString().slice(0, 10)
+    return path.join(
+      desktop,
+      studyID,
+      participantID,
+      date,
+      name
+    )
+  }
 }
 
 const getFullPath = (fileName) => {
+  log.info("Save path:", savePath)
   return path.join(savePath, fileName)
 }
 
@@ -220,7 +223,7 @@ ipc.on('data', (event, args) => {
     fileCreated = true
   }
 
-  if (savePath === "" && participantID !== "" && studyID !== "") {
+  if (savePath === "") {
     savePath = getSavePath(participantID, studyID)
   }
 
@@ -239,7 +242,7 @@ ipc.on('data', (event, args) => {
 // Save Video
 
 ipc.on('save_video', (event, fileName, buffer) => {
-  if (savePath === "" && participantID !== "" && studyID !== "") {
+  if (savePath === "") {
     savePath = getSavePath()
   }
 
