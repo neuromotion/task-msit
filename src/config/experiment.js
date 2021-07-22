@@ -2,18 +2,6 @@ import { envConfig } from './main';
 import localConfig from "./config.json"
 import path from "path"
 
-const localConfigKeys = Object.keys(localConfig)
-
-const checkConfig = (customConfig) => {
-  for (let i = 0; i < localConfigKeys.length; i++) {
-    const setting = localConfigKeys[i]
-    if (!(setting in customConfig)) {
-      return false
-    }
-  }
-  return true
-}
-
 const getConfig = async (participantID, studyID) => {
   let experimentConfig = localConfig
   console.log("participant id:", participantID)
@@ -28,10 +16,7 @@ const getConfig = async (participantID, studyID) => {
         `${participantID}-config.json`
       );
       console.log("Override config", overrideConfig)
-      experimentConfig = JSON.parse(fs.readFileSync(overrideConfig), "utf8");
-      if (!checkConfig(experimentConfig)) {
-        throw new Error()
-      }
+      experimentConfig = Object.assign(experimentConfig, JSON.parse(fs.readFileSync(overrideConfig), "utf8"));
     } catch (error) {
       console.warn("Using default config")
     }
