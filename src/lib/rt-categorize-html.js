@@ -129,7 +129,8 @@ export function rt_categorize_html() {
         "rt": info.rt,
         "correct": correct,
         "stimulus": trial.stimulus,
-        "key_press": info.key
+        "key_press": info.key,
+        "key_answer": trial.key_answer
       };
 
       display_element.innerHTML = '';
