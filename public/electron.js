@@ -4,7 +4,6 @@ if(require('electron-squirrel-startup')) return
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, dialog } = require('electron')
 const path = require('path')
-const url = require('url')
 const ipc = require('electron').ipcMain
 const _ = require('lodash')
 const fs = require('fs-extra')
@@ -13,10 +12,11 @@ const log = require('electron-log');
 // Define default environment variables
 let USE_EEG = false
 let VIDEO = false
+const HIDE_FRAME_ELECTRON = process.env.REACT_APP_HIDE_FRAME_ELECTRON === "true";
 
 // Event Trigger
 const { eventCodes, vendorId, productId, comName } = require('./config/trigger')
-const { isPort, getPort, sendToPort } = require('event-marker')
+const { getPort, sendToPort } = require('event-marker')
 
 // Override product ID if environment variable set
 const activeProductId = process.env.EVENT_MARKER_PRODUCT_ID || productId
@@ -48,7 +48,7 @@ function createWindow () {
     mainWindow = new BrowserWindow({
       fullscreen: true,
       icon: './favicon.ico',
-      frame: false,
+      frame: !HIDE_FRAME_ELECTRON,
       webPreferences: {
         nodeIntegration: true,
         webSecurity: true
@@ -57,13 +57,9 @@ function createWindow () {
   }
 
   // and load the index.html of the app.
-  const startUrl = process.env.ELECTRON_START_URL || url.format({
-            pathname: path.join(__dirname, '../build/index.html'),
-            protocol: 'file:',
-            slashes: true
-        });
-  log.info(startUrl);
-  mainWindow.loadURL(startUrl);
+  const startURL = process.env.ELECTRON_START_URL || `file://${path.join(__dirname, '../build/index.html')}`
+  log.info(startURL);
+  mainWindow.loadURL(startURL);
 
   // Open the DevTools.
   process.env.ELECTRON_START_URL && mainWindow.webContents.openDevTools()
@@ -83,10 +79,11 @@ let portAvailable
 let SKIP_SENDING_DEV = false
 
 const setUpPort = async () => {
+  let p
   if (activeProductId){
     p = await getPort(vendorId, activeProductId)
   } else {
-  p = await getPort(activeComName)
+    p = await getPort(activeComName)
   }
   if (p) {
     triggerPort = p
@@ -100,7 +97,7 @@ const setUpPort = async () => {
       }
       dialog.showMessageBox(mainWindow, {type: "error", message: "Error communicating with event marker.", title: "Task Error", buttons: buttons, defaultId: 0})
         .then((opt) => {
-          if (opt.response == 0) {
+          if (opt.response === 0) {
             app.exit()
           } else {
             SKIP_SENDING_DEV = true
@@ -127,12 +124,12 @@ const handleEventSend = (code) => {
     dialog.showMessageBox(mainWindow, {type: "error", message: message, title: "Task Error", buttons: buttons, defaultId: 0})
       .then((resp) => {
         let opt = resp.response
-        if (opt == 0) { // quit
+        if (opt === 0) { // quit
           app.exit()
-        } else if (opt == 1) { // retry
+        } else if (opt === 1) { // retry
           setUpPort()
           .then(() => handleEventSend(code))
-        } else if (opt == 2) {
+        } else if (opt === 2) {
           SKIP_SENDING_DEV = true
         }
       })
@@ -141,7 +138,6 @@ const handleEventSend = (code) => {
     sendToPort(triggerPort, code)
   }
 }
-
 
 // Update env variables with buildtime values from frontend
 ipc.on('updateEnvironmentVariables', (event, args) => {
@@ -156,7 +152,7 @@ ipc.on('updateEnvironmentVariables', (event, args) => {
 // EVENT TRIGGER
 ipc.on('trigger', (event, args) => {
   let code = args
-  if (code != undefined) {
+  if (code !== undefined) {
     log.info(`Event: ${_.invert(eventCodes)[code]}, code: ${code}`)
      if (USE_EEG) {
        handleEventSend(code)
@@ -170,43 +166,64 @@ ipc.on('trigger', (event, args) => {
 
 // INCREMENTAL FILE SAVING
 let stream = false
-let fileName = ''
-let filePath = ''
-let directoryPath = ''
+let fileCreated = false
+let preSavePath = ''
 let participantID = ''
 let studyID = ''
-let images = []
+let today = new Date()
 let startTrial = -1
 
+let savePath = ""
+
+/**
+ * Abstracts constructing the filepath for saving data for this participant and study.
+ * @returns {string} The filepath.
+ */
+const getSavePath = (participantID, studyID) => {
+  if (participantID !== "" && studyID !== "") {
+    const desktop = app.getPath('desktop')
+    const name = app.getName()
+    const date = today.toISOString().slice(0, 10)
+    return path.join(
+      desktop,
+      studyID,
+      participantID,
+      date,
+      name
+    )
+  }
+}
+
+const getFullPath = (fileName) => {
+  log.info("Save path:", savePath)
+  return path.join(savePath, fileName)
+}
 
 // Read version file (git sha and branch)
-var git = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config/version.json')));
+let git = JSON.parse(fs.readFileSync(path.resolve(__dirname, 'config/version.json')));
 
 // Get Participant Id and Study Id from environment
 ipc.on('syncCredentials', (event) => {
   event.returnValue = {envParticipantId: process.env.REACT_APP_PARTICIPANT_ID, envStudyId: process.env.REACT_APP_STUDY_ID}
 })
 
-
 // listener for new data
 ipc.on('data', (event, args) => {
 
-  // initialize file - we got a patinet_id to save the data to
-  if (args.participant_id && args.study_id && fileName === '') {
-    const dir = app.getPath('userData')
+  // initialize file - we got a participant_id to save the data to
+  if (args.participant_id && args.study_id && !fileCreated) {
+    const userDataDir = app.getPath('userData')
     participantID = args.participant_id
     studyID = args.study_id
-    const desktop = app.getPath('desktop')
-    const name = app.getName()
-    const today = new Date()
-    const date = today.toISOString().slice(0,10)
-    fileName = `pid_${participantID}_${today.getTime()}.json`
-    filePath = path.resolve(dir, fileName)
-    directoryPath = path.join(desktop, studyID, participantID, date, name)
+    preSavePath = path.resolve(userDataDir, `pid_${participantID}_${today.getTime()}.json`)
     startTrial = args.trial_index
-    log.warn(filePath)
-    stream = fs.createWriteStream(filePath, {flags:'ax+'});
+    stream = fs.createWriteStream(preSavePath, {flags:'ax+'});
     stream.write('[')
+    fileCreated = true
+  }
+
+  if (savePath === "") {
+    savePath = getSavePath(participantID, studyID)
   }
 
   // we have a set up stream to write to, write to it!
@@ -224,11 +241,15 @@ ipc.on('data', (event, args) => {
 // Save Video
 
 ipc.on('save_video', (event, fileName, buffer) => {
-  if (VIDEO){
-    const fullPath = path.join(directoryPath, fileName)
+  if (savePath === "") {
+    savePath = getSavePath(participantID, studyID)
+  }
+
+  if (VIDEO) {
+    const fullPath = getFullPath(fileName)
     fs.outputFile(fullPath, buffer, err => {
       if (err) {
-          event.sender.send(ERROR, err.message)
+        event.sender.send(ERROR, err.message)
       } else {
         event.sender.send('SAVED_FILE', fullPath)
         console.log(fullPath)
@@ -237,8 +258,8 @@ ipc.on('save_video', (event, fileName, buffer) => {
   }
 })
 
-// EXPERMENT END
-ipc.on('end', (event, args) => {
+// EXPERIMENT END
+ipc.on('end', () => {
   // quit app
   app.quit()
 })
@@ -252,7 +273,16 @@ ipc.on('error', (event, args) => {
   }
   const opt = dialog.showMessageBoxSync(mainWindow, {type: "error", message: args, title: "Task Error", buttons: buttons})
 
-  if (opt == 0) app.quit()
+  if (opt === 0) app.quit()
+})
+
+ipc.on('save-config', (event, config, participantID, studyID) => {
+  if (savePath === "") {
+    savePath = getSavePath(participantID, studyID)
+  }
+  const configFileName = `pid_${participantID}_${today.getTime()}_config.json`
+  const saveConfigPath = getFullPath(configFileName)
+  fs.writeFile(saveConfigPath, Buffer.from(JSON.stringify(config))).catch((error) => log.error(error))
 })
 
 
@@ -293,17 +323,16 @@ app.on('activate', function () {
 
 // Before quitting, finish writing file and copy it over
 app.on('will-quit', () => {
-  if (fileName) {
+  if (fileCreated) {
     // finish writing file
     stream.write(']')
     stream.end()
     stream = false
 
     // copy file to config location
-    fs.mkdir(directoryPath, { recursive: true }, (err) => {
+    fs.mkdir(savePath, { recursive: true }, (err) => {
       log.error(err)
-      fs.copyFileSync(filePath, path.join(directoryPath, fileName))
-  
+      fs.copyFileSync(preSavePath, getFullPath(`pid_${participantID}_${today.getTime()}.json`))
     })
   }
 })

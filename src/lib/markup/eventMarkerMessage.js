@@ -1,7 +1,7 @@
-import { config, lang } from '../../config/main'
+import { envConfig, lang } from '../../config/main'
 
 const eventMarkerMessage = async () => {
-	if (!config.USE_MTURK) {
+	if (!envConfig.USE_MTURK) {
 		return `<span style="color: green;">${lang.eventMarker.found}</span>`
 	}
 	else {

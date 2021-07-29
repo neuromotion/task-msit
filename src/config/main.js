@@ -60,7 +60,7 @@ if (!USE_ELECTRON) {
 const taskName = "MSIT";
 
 // setting config for trials
-const config = {
+const envConfig = {
   USE_PHOTODIODE,
   USE_EEG,
   USE_ELECTRON,
@@ -75,7 +75,7 @@ export {
   keys,
   lang,
   eventCodes,
-  config,
+  envConfig,
   audioCodes,
   taskName,
 };

@@ -1,22 +1,30 @@
-import { defaultBlockSettings } from './main';
-import { deepCopy } from '../lib/utils'
+import { envConfig } from './main';
+import localConfig from "./config.json"
+import path from "path"
 
-// FIRST EXPERIMENT BLOCK SETTINGS
-
-// create copy of default settings
-let exptBlock1 = deepCopy(defaultBlockSettings)
-
-exptBlock1.repeats_per_condition = 2
-
-// SECOND EXPERIMENT BLOCK SETTINGS
-
-// create copy of default settings
-let exptBlock2 = deepCopy(defaultBlockSettings)
-
-exptBlock2.conditions = ["e", "f"]
-exptBlock2.repeats_per_condition = 2
-
-export {
-  exptBlock1,
-  exptBlock2,
+const getConfig = async (participantID, studyID) => {
+  let experimentConfig = localConfig
+  console.log("participant id:", participantID)
+  if (envConfig.USE_ELECTRON ) {
+    const app = window.require("electron").remote.app
+    const renderer = window.require("electron").ipcRenderer;
+    const fs = window.require("fs")
+    try {
+      const overrideConfig = path.join(
+        app.getPath("desktop"),
+        "msit-settings",
+        `${participantID}-config.json`
+      );
+      console.log("Override config", overrideConfig)
+      experimentConfig = Object.assign(experimentConfig, JSON.parse(fs.readFileSync(overrideConfig), "utf8"));
+    } catch (error) {
+      console.warn("Using default config")
+    }
+    renderer.send("save-config", experimentConfig, participantID, studyID)
+  } else {
+    console.warn("Using default config")
+  }
+  return experimentConfig
 }
+
+export { getConfig }
