@@ -282,7 +282,14 @@ ipc.on('save-config', (event, config, participantID, studyID) => {
   }
   const configFileName = `pid_${participantID}_${today.getTime()}_config.json`
   const saveConfigPath = getFullPath(configFileName)
-  fs.writeFile(saveConfigPath, Buffer.from(JSON.stringify(config))).catch((error) => log.error(error))
+  if (!fs.existsSync(savePath)) {
+    fs.mkdir(savePath, { recursive: true }, (err) => {
+      log.error(err)
+      fs.writeFile(saveConfigPath, Buffer.from(JSON.stringify(config))).catch((error) => log.error(error))
+    })
+  } else {
+    fs.writeFile(saveConfigPath, Buffer.from(JSON.stringify(config))).catch((error) => log.error(error))
+  }
 })
 
 
@@ -330,9 +337,13 @@ app.on('will-quit', () => {
     stream = false
 
     // copy file to config location
-    fs.mkdir(savePath, { recursive: true }, (err) => {
-      log.error(err)
+    if (fs.existSync(savePath)) {
+      fs.mkdir(savePath, { recursive: true }, (err) => {
+        log.error(err)
+        fs.copyFileSync(preSavePath, getFullPath(`pid_${participantID}_${today.getTime()}.json`))
+      })
+    } else {
       fs.copyFileSync(preSavePath, getFullPath(`pid_${participantID}_${today.getTime()}.json`))
-    })
+    }
   }
 })
