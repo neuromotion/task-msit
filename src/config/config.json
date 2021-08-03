@@ -1,4 +1,5 @@
 {
   "accuracy_cutoff": 80,
-  "response_time_limit": 1250
+  "response_time_limit": 1250,
+  "font_magnification": 100
 }
