@@ -10,9 +10,11 @@ import numBlocks from '../trials/blockNumber'
 let tl = [experimentStart()];
 if (envConfig.USE_VOLUME) {
   tl.push(adjustVolume());
-} 
-if (envConfig.USE_EEG) {
+}
+if (envConfig.USE_PHOTODIODE) {
   tl.push(numBlocks())
+}
+if (envConfig.USE_EEG) {
   tl.push(holdUpMarker());
   tl.push(startCode());
 }
