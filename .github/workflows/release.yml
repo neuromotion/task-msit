@@ -12,8 +12,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        setting: ['home', 'clinic' ]
+        setting: ['home', 'clinic', 'pdonly' ]
         os: [ubuntu-latest, macOS-latest, windows-latest]
+        exclude:
+          - os: ubuntu-latest
+            setting: pdonly
+          - os: macOS-latest
+            setting: pdonly
 
 
     steps:

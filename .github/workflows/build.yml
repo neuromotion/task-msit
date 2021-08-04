@@ -16,22 +16,37 @@ jobs:
 
     strategy:
       matrix:
-        setting: [home, clinic]
+        setting: [home, clinic, pdonly]
         video: [on, off]
         os: [ubuntu-latest, macOS-latest, windows-latest]
-        exclude: 
-          # exclude clinic video on ubuntu-latest 
+        exclude:
+          # exclude clinic video on ubuntu-latest
           - os: ubuntu-latest
             setting: clinic
-            video: on 
+            video: on
           - os: macOS-latest
             setting: clinic
-            video: on 
+            video: on
           - os: ubuntu-latest
             setting: home
             video: on
           - os: macOS-latest
             setting: home
+            video: on
+          - os: ubuntu-latest
+            setting: pdonly
+            video: on
+          - os: macOS-latest
+            setting: pdonly
+            video: on
+          - os: ubuntu-latest
+            setting: pdonly
+            video: off
+          - os: macOS-latest
+            setting: pdonly
+            video: off
+          - os: windows-latest
+            setting: pdonly
             video: on
 
     steps:
