@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       setting:
-        description: Build for 'home' or 'clinic'
+        description: Build for 'home', 'clinic', or 'pdonly'
         required: true
         default: 'home'
       os:
