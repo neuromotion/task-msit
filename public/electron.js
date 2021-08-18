@@ -209,13 +209,13 @@ ipc.on('syncCredentials', (event) => {
 
 // listener for new data
 ipc.on('data', (event, args) => {
-
   // initialize file - we got a participant_id to save the data to
   if (args.participant_id && args.study_id && !fileCreated) {
     const userDataDir = app.getPath('userData')
     participantID = args.participant_id
     studyID = args.study_id
     preSavePath = path.resolve(userDataDir, `pid_${participantID}_${today.getTime()}.json`)
+    console.log(preSavePath)
     startTrial = args.trial_index
     stream = fs.createWriteStream(preSavePath, {flags:'ax+'});
     stream.write('[')
@@ -337,7 +337,7 @@ app.on('will-quit', () => {
     stream = false
 
     // copy file to config location
-    if (fs.existSync(savePath)) {
+    if (fs.existsSync(savePath)) {
       fs.mkdir(savePath, { recursive: true }, (err) => {
         log.error(err)
         fs.copyFileSync(preSavePath, getFullPath(`pid_${participantID}_${today.getTime()}.json`))
