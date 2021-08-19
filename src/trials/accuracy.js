@@ -9,7 +9,7 @@ const accuracy = (training, num_trials, num_complete, experimentConfig) => {
     stimulus: '',
     data: {percent_correct: 0},
     on_finish: () => {
-      if (envConfig.USE_EEG){
+      if (envConfig.USE_PHOTODIODE){
         const j_data = jsPsych.data.get().last(1).values()[0]
         if (!training && num_complete>=j_data.num_blocks*96) {
           jsPsych.endCurrentTimeline()
@@ -42,7 +42,7 @@ const accuracy = (training, num_trials, num_complete, experimentConfig) => {
         }
       } else {
         const j_data = jsPsych.data.get().last(1).values()[0]
-        if (envConfig.USE_EEG){
+        if (envConfig.USE_PHOTODIODE){
           trial.prompt = lang.prompt.continue.block + (num_complete/96).toString() + lang.prompt.continue.of + j_data.num_blocks + lang.prompt.continue.next_block
         }
         else {
