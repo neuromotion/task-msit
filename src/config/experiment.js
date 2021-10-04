@@ -17,7 +17,8 @@ const getConfig = async (participantID, studyID) => {
         `${participantID}-config.json`
       );
       console.log("Override config", overrideConfig)
-      experimentConfig = Object.assign(experimentConfig, JSON.parse(fs.readFileSync(overrideConfig), "utf8"));
+      const newConfig = JSON.parse(fs.readFileSync(overrideConfig), "utf8")
+      experimentConfig = {...experimentConfig, ...newConfig}
     } catch (error) {
       console.warn("Using default config")
     }

@@ -46,18 +46,18 @@ const initParticipant = (participantId, studyId, startDate) => {
 };
 
 // get config from firebase
-const getFirestoreConfig = (studyID, docName) => {
+const getFirestoreConfig = (studyID, participantID) => {
   return db
     .collection(REGISTERED_COLLECTION_NAME)
     .doc(studyID)
     .collection("config")
-    .doc(docName)
+    .doc(participantID)
     .get()
     .then((doc) => {
       if (doc.exists) {
         return JSON.parse(doc.data().config);
       } else {
-        console.log(`Document ${docName} does not exist`);
+        console.log(`Document ${participantID} does not exist`);
         return false;
       }
     })
@@ -73,10 +73,8 @@ const getFirestoreConfig = (studyID, docName) => {
 const firestoreConfig = async (studyID, participantID) => {
   const pConfig = await getFirestoreConfig(studyID, participantID);
   const defaultConfig = await getFirestoreConfig(studyID, "default");
-  if (pConfig) {
-    return pConfig;
-  } else if (defaultConfig) {
-    return defaultConfig;
+  if (pConfig || defaultConfig) {
+    return {...defaultConfig, ...pConfig};
   } else {
     return false;
   }
