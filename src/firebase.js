@@ -73,6 +73,7 @@ const getFirestoreConfig = (studyID, participantID) => {
 const firestoreConfig = async (studyID, participantID) => {
   const pConfig = await getFirestoreConfig(studyID, participantID);
   const defaultConfig = await getFirestoreConfig(studyID, "default");
+  // Returning false will not interfere with override of the object
   if (pConfig || defaultConfig) {
     return {...defaultConfig, ...pConfig};
   } else {
