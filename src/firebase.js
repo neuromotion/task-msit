@@ -5,6 +5,7 @@ require("dotenv").config();
 
 // Set collection name
 const collectionName = "participant_responses";
+const REGISTERED_COLLECTION_NAME = "registered_studies";
 
 // Firebase config
 let config = {
@@ -44,6 +45,42 @@ const initParticipant = (participantId, studyId, startDate) => {
     });
 };
 
+// get config from firebase
+const getFirestoreConfig = (studyID, participantID) => {
+  return db
+    .collection(REGISTERED_COLLECTION_NAME)
+    .doc(studyID)
+    .collection("config")
+    .doc(participantID)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return JSON.parse(doc.data().config);
+      } else {
+        console.log(`Document ${participantID} does not exist`);
+        return false;
+      }
+    })
+    .catch((error) => console.log("Error in getting config:", error));
+};
+
+/**
+ * Gets the config object for the logged-in participant, or uses the default for the study. The config object
+ * is a string.
+ * @param {string} studyID The study ID specified at login.
+ * @param {string} participantID The logged in participant ID.
+ */
+const firestoreConfig = async (studyID, participantID) => {
+  const pConfig = await getFirestoreConfig(studyID, participantID);
+  const defaultConfig = await getFirestoreConfig(studyID, "default");
+  // Returning false will not interfere with override of the object
+  if (pConfig || defaultConfig) {
+    return {...defaultConfig, ...pConfig};
+  } else {
+    return false;
+  }
+};
+
 // Add inidividual trials to db
 const addToFirebase = (data) => {
   console.log(data)
@@ -65,7 +102,8 @@ export {
   db,
   collectionName,
   initParticipant,
-  addToFirebase
+  addToFirebase,
+  firestoreConfig
 };
 
 export default firebase;
