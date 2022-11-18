@@ -92,7 +92,7 @@
     "electron": "6.1.1",
     "electron-devtools-installer": "^3.2.0",
     "electron-packager": "^14.0.6",
-    "electron-rebuild": "^1.8.6",
+    "@electron/rebuild": "^3.2.10",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^14",
     "eslint-plugin-import": "^2.18.2",
