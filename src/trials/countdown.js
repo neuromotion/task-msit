@@ -8,7 +8,7 @@ const buildCountdown = (text, time) => {
   return ({
     type: 'html_keyboard_response',
     stimulus: `<h3>${text}</h3`,
-    trial_duration: 1000,
+    trial_duration: 3000,
     response_ends_trial: false,
     timeline:  timeline
   })
