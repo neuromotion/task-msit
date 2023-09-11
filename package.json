@@ -15,7 +15,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.9.0",
     "bootstrap": "^4.3.1",
-    "electron-log": "^3.0.9",
+    "electron-log": "^4.4.8",
     "electron-squirrel-startup": "^1.0.0",
     "event-marker": "git+https://github.com/brown-ccv/event-marker.git",
     "firebase": "^8.5.0",
@@ -89,10 +89,10 @@
     "concurrently": "^4.1.2",
     "cross-env": "^7.0.3",
     "dotenv-cli": "^4.0.0",
-    "electron": "6.1.1",
+    "electron": "26.0.0",
     "electron-devtools-installer": "^3.2.0",
-    "electron-packager": "^14.0.6",
-    "@electron/rebuild": "^3.2.10",
+    "electron-packager": "^17.1.2",
+    "@electron/rebuild": "^3.3.0",
     "eslint": "^6.6.0",
     "eslint-config-standard": "^14",
     "eslint-plugin-import": "^2.18.2",
@@ -110,8 +110,8 @@
     ]
   },
   "optionalDependencies": {
-    "electron-installer-debian": "^2.0.0",
-    "electron-installer-dmg": "^3.0.0",
-    "electron-installer-windows": "^2.0.0"
+    "electron-installer-debian": "^3.2.0",
+    "electron-installer-dmg": "^4.0.0",
+    "electron-installer-windows": "^3.0.0"
   }
 }
